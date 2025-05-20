@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/contexts/NpcSystemsContext.tsx
@@ -9,14 +10,17 @@ import React, {
   useState,
   ReactNode,
   useCallback,
+  useMemo,
 } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AxiosResponse } from "axios"; // Import AxiosResponse for explicit typing
-import NpcSystemService, {
+import createNpcSystemService, {
   NpcSystemQueryParams,
   PaginatedNpcSystemsResponse,
 } from "../../services/npcSystem.service";
 import { NpcSystemRecord, npcSystemRecord } from "../../dataModels/NpcSystem";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate"; // Import useAxiosPrivate
+
 // Grid or List view type
 import { PageViewType } from "../../components/BaseComponents/ViewSelectButtons/ViewSelectButtons";
 import { NotifyState } from "../../components/BaseComponents/Notification/Notification";
@@ -122,6 +126,13 @@ export const NpcSystemsContextProvider: React.FC<
   NpcSystemsContextProviderProps
 > = ({ children }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const axiosPrivateInstance = useAxiosPrivate(); // Get the configured Axios instance
+  // Create the service instance using useMemo and the axiosPrivateInstance
+  const npcSystemService = useMemo(() => {
+    return createNpcSystemService(axiosPrivateInstance);
+  }, [axiosPrivateInstance]);
+
   const [allParamsRaw, setAllParamsRaw] = useState<string | null>(null);
   const [pageView, setPageView] = useState<PageViewType>("list");
   const [page, setPage] = useState<number>(1);
@@ -177,7 +188,7 @@ export const NpcSystemsContextProvider: React.FC<
 
         // Explicitly typing the response variable
         const response: AxiosResponse<PaginatedNpcSystemsResponse> =
-          await NpcSystemService.getAllRecords(params);
+          await npcSystemService.getAllRecords(params);
 
         // Now using response.data which is of type PaginatedNpcSystemsResponse
         // console.log("Fetched NPC Systems:", response.data);
@@ -194,11 +205,16 @@ export const NpcSystemsContextProvider: React.FC<
         );
       } catch (err: any) {
         console.error("Failed to fetch NPC Systems:", err);
-        const errorMessage =
-          err.response?.data?.message ||
-          err.message ||
-          "An unknown error occurred.";
-        setError(errorMessage);
+        if (err.response?.status?.toString() == "401") {
+          // window.location.href = "/error-401";
+          navigate("/error-401");
+        } else {
+          const errorMessage =
+            err.response?.data?.message ||
+            err.message ||
+            "An unknown error occurred.";
+          setError(errorMessage);
+        }
         setRecordsList([]);
         setTotalRecords(0);
         setTotalPages(0);
@@ -242,9 +258,9 @@ export const NpcSystemsContextProvider: React.FC<
     setLoading(true);
     setError(null);
     try {
-      // NpcSystemService.addRecord returns AxiosResponse<NpcSystemRecord>
+      // npcSystemService.addRecord returns AxiosResponse<NpcSystemRecord>
       const response: AxiosResponse<NpcSystemRecord> =
-        await NpcSystemService.addRecord(npcSystemData);
+        await npcSystemService.addRecord(npcSystemData);
       fetchNpcSystems({ page: 1 });
       return response.data; // Return the NpcSystemRecord from response.data
     } catch (err: any) {
@@ -266,9 +282,9 @@ export const NpcSystemsContextProvider: React.FC<
     setLoading(true);
     setError(null);
     try {
-      // NpcSystemService.updateRecord returns Promise<NpcSystemRecord> directly
+      // npcSystemService.updateRecord returns Promise<NpcSystemRecord> directly
       const updatedRecord: NpcSystemRecord =
-        await NpcSystemService.updateRecord(npcSystemData);
+        await npcSystemService.updateRecord(npcSystemData);
       setRecordsList((prev) =>
         prev.map((rec) => (rec.id === updatedRecord.id ? updatedRecord : rec))
       );
@@ -289,8 +305,8 @@ export const NpcSystemsContextProvider: React.FC<
     setLoading(true);
     setError(null);
     try {
-      // NpcSystemService.deleteRecord returns Promise<any> (data from response)
-      await NpcSystemService.deleteRecord(id);
+      // npcSystemService.deleteRecord returns Promise<any> (data from response)
+      await npcSystemService.deleteRecord(id);
       fetchNpcSystems();
       return true;
     } catch (err: any) {
@@ -312,9 +328,9 @@ export const NpcSystemsContextProvider: React.FC<
     setLoading(true);
     setError(null);
     try {
-      // NpcSystemService.patchRecordSts returns Promise<NpcSystemRecord> directly
+      // npcSystemService.patchRecordSts returns Promise<NpcSystemRecord> directly
       const updatedRecord: NpcSystemRecord =
-        await NpcSystemService.patchRecordSts(id, status);
+        await npcSystemService.patchRecordSts(id, status);
       setRecordsList((prev) =>
         prev.map((rec) => (rec.id === updatedRecord.id ? updatedRecord : rec))
       );

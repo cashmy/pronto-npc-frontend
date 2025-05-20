@@ -20,6 +20,7 @@ const useAxiosPrivate = () => {
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
+        console.log("Request Intercepted");
         if (!config.headers["Authorization"]) {
           // Ensure accessToken exists before trying to use it
           if (auth?.accessToken) {
