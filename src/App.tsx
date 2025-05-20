@@ -16,6 +16,7 @@ import Error403 from "./pages/ErrorPages/Error403";
 import Error404 from "./pages/ErrorPages/Error404";
 import Error500 from "./pages/ErrorPages/Error500";
 import Error503 from "./pages/ErrorPages/Error503";
+import TermsAndConditionsPage from "./Errata/TermsAndConditions/TermsAndConditionsPage";
 
 import { ImageType } from "./pages/ImageLibraries/imageTypes";
 import ImageLibrariesController from "./pages/ImageLibraries/ImageLibrariesController";
@@ -57,6 +58,10 @@ const App = () => {
               <Route path="/error-404" element={<Error404 />} />
               <Route path="/error-500" element={<Error500 />} />
               <Route path="/error-503" element={<Error503 />} />
+              <Route
+                path="/termsandconditions"
+                element={<TermsAndConditionsPage />}
+              />
 
               {/* Protected Routes */}
               <Route element={<RequireAuth />}>

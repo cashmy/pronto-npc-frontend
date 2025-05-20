@@ -224,12 +224,14 @@ const Signup = () => {
                       I agree to
                     </Box>
                     <Box
-                      component="span"
+                      component={RouterLink}
+                      to="/TermsAndConditions"
                       sx={{
                         color: "primary.main",
                         fontWeight: Fonts.BOLD,
                         fontSize: 14,
                         cursor: "pointer",
+                        textDecoration: "none",
                       }}
                     >
                       Terms & Conditions
