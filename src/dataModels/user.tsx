@@ -52,3 +52,12 @@ export const shortUserRecord: ShortUserRecord = {
   first_name: "",
   last_name: "",
 };
+
+export interface LoginRecord {
+  email: string;
+  password: string;
+}
+export const loginRecord: LoginRecord = {
+  email: "",
+  password: "",
+};

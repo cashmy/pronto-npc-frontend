@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import {
   AppBar,
@@ -47,6 +48,7 @@ import {
 } from "../../constants/layoutConstants";
 import { useLayoutState } from "../../context";
 import LoginModal from "../Login/LoginModal"; // adjust path as needed
+import useLogout from "../../hooks/useLogout"; // adjust path as needed
 
 const navItems = [
   { label: "Home", icon: <HomeIcon />, path: "/" },
@@ -77,6 +79,9 @@ const navItems2 = [
 // ];
 
 const ResponsiveAppBar: React.FC = () => {
+  const navigate = useNavigate();
+  const logout = useLogout();
+
   const {
     navViewMode,
     toggleNavViewMode,
@@ -92,6 +97,10 @@ const ResponsiveAppBar: React.FC = () => {
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+  };
   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   const userInitials = "U"; // Todo: move to context later
@@ -116,6 +125,15 @@ const ResponsiveAppBar: React.FC = () => {
             >
               <MenuIcon />
             </IconButton>
+            <Box sx={{ ml: 2 }}>
+              <img
+                className="logo"
+                src={"/images/logo_4.png"}
+                alt="pronto-npc-logo"
+                title="pronto-npc-logo"
+                style={{ height: 48 }} // Adjust the height as needed
+              />
+            </Box>
             <Typography variant="h6" noWrap sx={{ ml: 1 }}>
               Pronto NPC Generator
             </Typography>
@@ -166,7 +184,7 @@ const ResponsiveAppBar: React.FC = () => {
                   <MenuItem onClick={handleMenuClose}>Account</MenuItem>
                   <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
                   <Divider />
-                  <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </div>
               ) : (
                 <div>

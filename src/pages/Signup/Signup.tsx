@@ -1,14 +1,16 @@
-import Card from "@mui/material/Card";
+import { Link as RouterLink } from "react-router-dom";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
 import { Checkbox } from "@mui/material";
+import { TextField } from "@mui/material";
+
+import AppAnimate from "../../components/AppAnimate";
 import { Form, Formik } from "formik";
 import * as yup from "yup";
-import Box from "@mui/material/Box";
 import { Fonts } from "../../constants/AppEnums";
 import { grey } from "@mui/material/colors";
-import AppAnimate from "../../components/AppAnimate";
 // import TextField from "../../components/BaseComponents/TextField";
-import { TextField } from "@mui/material";
 
 const Signup = () => {
   // const { messages } = useIntl();
@@ -67,8 +69,8 @@ const Signup = () => {
               <img
                 className="logo"
                 src={"/images/logo_4.png"}
-                alt="crema"
-                title="crema"
+                alt="pronto-npc-logo"
+                title="Pronto NPC Logo"
               />
             </Box>
             <Box
@@ -103,7 +105,7 @@ const Signup = () => {
             }}
           >
             {({ isSubmitting }) => (
-              <Form noValidate autoComplete="off">
+              <Form noValidate>
                 <Box
                   sx={{
                     mb: { xs: 3, xl: 4 },
@@ -113,6 +115,7 @@ const Signup = () => {
                     label="User Name"
                     name="name"
                     variant="outlined"
+                    autoComplete="username"
                     sx={{
                       width: "100%",
                     }}
@@ -144,6 +147,7 @@ const Signup = () => {
                     name="password"
                     type="password"
                     variant="outlined"
+                    autoComplete="new-password"
                     sx={{
                       width: "100%",
                     }}
@@ -159,6 +163,7 @@ const Signup = () => {
                     label="Retype Password"
                     name="confirmPassword"
                     type="password"
+                    autoComplete="new-password"
                     variant="outlined"
                     sx={{
                       width: "100%",
@@ -231,11 +236,13 @@ const Signup = () => {
               Already have account?
             </Box>
             <Box
-              component="span"
+              component={RouterLink}
+              to="/LogIn"
               sx={{
                 color: "primary.main",
                 fontWeight: Fonts.MEDIUM,
                 cursor: "pointer",
+                textDecoration: "none",
               }}
             >
               Sign in here

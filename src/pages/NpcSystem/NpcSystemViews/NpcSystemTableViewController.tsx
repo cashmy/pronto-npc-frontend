@@ -50,7 +50,7 @@ const NpcSystemTableViewController: React.FC<
               ListEmptyComponent={
                 <ListEmptyResult
                   loading={loading}
-                  actionTitle="Create Campaign"
+                  actionTitle="Create New NpcSystem"
                   onClick={handleAddRecordOpen}
                   placeholder={<NpcSystemListSkeleton />}
                 />
