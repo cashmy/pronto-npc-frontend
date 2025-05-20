@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "../api/axios";
 import useAuth from "./useAuth";
 import { AuthState } from "../context/AuthProvider"; // Import from the source of truth

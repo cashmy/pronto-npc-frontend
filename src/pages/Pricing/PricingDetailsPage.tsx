@@ -138,7 +138,7 @@ const plans = [
   {
     id: "standard",
     title: "Story Weaver Pro",
-    price: "$9.99",
+    price: "9.99",
     popular: true,
     cta: "Choose Pro Plan",
     ctaLink: "/signup?tier=pro",
@@ -146,7 +146,7 @@ const plans = [
   {
     id: "premium",
     title: "Mythic Architect",
-    price: "$19.99",
+    price: "19.99",
     popular: false,
     cta: "Go Mythic",
     ctaLink: "/signup?tier=mythic",
