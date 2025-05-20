@@ -17,6 +17,7 @@ import Error404 from "./pages/ErrorPages/Error404";
 import Error500 from "./pages/ErrorPages/Error500";
 import Error503 from "./pages/ErrorPages/Error503";
 import TermsAndConditionsPage from "./Errata/TermsAndConditions/TermsAndConditionsPage";
+import PrivacyPolicy from "./Errata/PrivacyPolicy";
 
 import { ImageType } from "./pages/ImageLibraries/imageTypes";
 import ImageLibrariesController from "./pages/ImageLibraries/ImageLibrariesController";
@@ -62,6 +63,9 @@ const App = () => {
                 path="/termsandconditions"
                 element={<TermsAndConditionsPage />}
               />
+              <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+
+              {/* Image Libraries */}
 
               {/* Protected Routes */}
               <Route element={<RequireAuth />}>

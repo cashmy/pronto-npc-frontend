@@ -2,13 +2,14 @@ import React from "react";
 import {
   Container,
   Typography,
-  Link,
+  Link as MuiLink,
   List,
   ListItem,
   Divider,
   Box,
   Theme, // Import Theme
 } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom"; // Import RouterLink for internal links
 import { SxProps } from "@mui/system"; // Import SxProps
 
 import { useLayoutState } from "../../context";
@@ -40,7 +41,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
   websiteAddress = "[YourWebsiteAddress.com]",
   contactEmail = "cmyers880@gmail.com",
   companyAddress = "[Your Physical Address, if applicable]",
-  privacyPolicyUrl = "/privacy-policy", // Default, can be overridden
+  privacyPolicyUrl = "/privacypolicy", // Default, can be overridden
   governingLawStateCountry = "The State of Wisconsin",
   jurisdictionCityCounty = "Racine",
   userAgeRequirement = "12 years old", // Default
@@ -91,13 +92,13 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           govern your access to and use of the Pronto NPC Generator web
           application, including any content, functionality, and services
           offered on or through{" "}
-          <Link
+          <MuiLink
             href={`https://${websiteAddress}`}
             target="_blank"
             rel="noopener noreferrer"
           >
             {websiteAddress}
-          </Link>{" "}
+          </MuiLink>{" "}
           (the "Service"), a Software as a Service (SaaS) application designed
           for generating Non-Player Characters (NPCs) for role-playing games
           (RPGs) and detailed character generation for storytellers. Our Service
@@ -341,17 +342,18 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
             8. Data Privacy
           </Typography>
           <Typography paragraph sx={paragraphSpacing}>
-            Your privacy is important to us. Our Privacy Policy{" "}
-            <Link
-              href={privacyPolicyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+            Your privacy is important to us. Our{" "}
+            <MuiLink
+              component={RouterLink}
+              to={privacyPolicyUrl}
+              // color="secondary"
             >
-              [Link to Your Privacy Policy]
-            </Link>{" "}
-            explains how we collect, use, and share your personal information
-            and User Inputs. By using the Service, you consent to the collection
-            and use of your information as set forth in the Privacy Policy.
+              Privacy Policy{" "}
+            </MuiLink>
+            outlines our practices regarding the collection, explains how we
+            collect, use, and share your personal information and User Inputs.
+            By using the Service, you consent to the collection and use of your
+            information as set forth in the Privacy Policy.
           </Typography>
         </Box>
         {/* Section 9 */}
@@ -367,7 +369,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
             <strong>Termination by You:</strong> You may terminate your account
             and these Terms at any time by{" "}
             {/* Replace with actual procedure, e.g., "contacting us at " */}
-            <Link href={`mailto:${contactEmail}`}>{contactEmail}</Link>
+            <MuiLink href={`mailto:${contactEmail}`}>{contactEmail}</MuiLink>
             {/* or "using the account deletion feature in your account settings". */}
           </Typography>
           <Typography paragraph sx={paragraphSpacing}>
@@ -539,7 +541,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography paragraph>
             If you have any questions about these Terms, please contact us at:
             <br />
-            <Link href={`mailto:${contactEmail}`}>{contactEmail}</Link>
+            <MuiLink href={`mailto:${contactEmail}`}>{contactEmail}</MuiLink>
             {companyAddress &&
               companyAddress !== "[Your Physical Address, if applicable]" && (
                 <>
