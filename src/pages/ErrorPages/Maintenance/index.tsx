@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { grey } from "@mui/material/colors";
 import { Fonts } from "../../../constants/AppEnums";
-import { initialUrl } from "../../../constants/AppConst";
 import AppAnimate from "../../../components/AppAnimate";
 import Logo from "../../../assets/icon/maintenance.svg";
 
@@ -12,7 +11,7 @@ const Maintenance = () => {
   const navigate = useNavigate();
 
   const onGoBackToHome = () => {
-    navigate(initialUrl);
+    navigate("/");
   };
 
   return (
