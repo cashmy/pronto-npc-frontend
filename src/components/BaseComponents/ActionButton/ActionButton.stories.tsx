@@ -51,11 +51,6 @@ const meta: Meta<typeof ActionButton> = {
       description: "If true, the button will be disabled.",
     },
     // Include other relevant ButtonProps if needed
-    variant: {
-      control: "select",
-      options: ["text", "contained", "outlined"],
-      description: "The variant of the button.",
-    }, // Hide standard variant control as styling is custom
 
     sx: {
       control: "object",
@@ -92,18 +87,6 @@ export const Filled: Story = {
     filled: true,
     children: <AddIcon fontSize="small" />,
     tooltipText: "Add Item",
-    variant: "contained",
-    onClick: () => alert("Add Clicked!"),
-  },
-};
-
-export const Outlined: Story = {
-  args: {
-    ...Default.args, // Inherit args from Default
-    color: "primary",
-    children: <AddIcon fontSize="small" />,
-    tooltipText: "Add Item",
-    variant: "outlined",
     onClick: () => alert("Add Clicked!"),
   },
 };
@@ -120,7 +103,6 @@ export const WithoutTooltip: Story = {
 export const FilledWithoutTooltip: Story = {
   args: {
     ...WithoutTooltip.args, // Inherit args from WithoutTooltip
-    variant: "contained",
     // color: "success",
     backgroundColor: "#4caf50", // Custom background color
     filled: true,
@@ -163,7 +145,6 @@ export const AllSizes: Story = {
   ),
   args: {
     color: "primary",
-    variant: "contained",
     filled: true,
     backgroundColor: "#4caf50", // Example background color
   },

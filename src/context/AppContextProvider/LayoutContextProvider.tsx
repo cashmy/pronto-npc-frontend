@@ -1,5 +1,6 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
-import defaultConfig from '@crema/constants/defaultConfig';
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, ReactNode, useContext, useState } from "react";
+import defaultConfig from "../../constants/defaultConfig";
 
 export type LayoutData = {
   layoutType: string;
@@ -42,10 +43,10 @@ type LayoutContextProviderProps = {
 };
 
 const LayoutContextProvider: React.FC<LayoutContextProviderProps> = ({
-                                                                       children,
-                                                                     }) => {
+  children,
+}) => {
   const [layoutType, updateLayoutType] = useState<string>(
-    defaultConfig.layoutType,
+    defaultConfig.layoutType
   );
   const [navStyle, setNavStyle] = useState<string>(defaultConfig.navStyle);
 
@@ -54,11 +55,11 @@ const LayoutContextProvider: React.FC<LayoutContextProviderProps> = ({
   };
 
   const [footerType, setFooterType] = useState<string>(
-    defaultConfig.footerType,
+    defaultConfig.footerType
   );
   const [footer, setFooter] = useState<boolean>(defaultConfig.footer);
   const [headerType, setHeaderType] = useState<string>(
-    defaultConfig.headerType,
+    defaultConfig.headerType
   );
 
   return (

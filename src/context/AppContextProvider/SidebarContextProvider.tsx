@@ -1,5 +1,6 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
-import defaultConfig, { SidebarData } from '@crema/constants/defaultConfig';
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, ReactNode, useContext, useState } from "react";
+import defaultConfig, { SidebarData } from "../../constants/defaultConfig";
 
 export interface SidebarContextData {
   menuStyle?: string;
@@ -45,29 +46,28 @@ interface SidebarContextProviderProps {
 }
 
 const SidebarContextProvider: React.FC<SidebarContextProviderProps> = ({
-                                                                         children,
-                                                                       }) => {
+  children,
+}) => {
   const [menuStyle, updateMenuStyle] = useState<string>(
-    defaultConfig.sidebar.menuStyle,
+    defaultConfig.sidebar.menuStyle
   );
   const [sidebarColorSet, updateSidebarColorSet] = useState<SidebarData>(
-    defaultConfig.sidebar.colorSet,
+    defaultConfig.sidebar.colorSet
   );
   const [isSidebarBgImage, updateImage] = useState<boolean>(
-    defaultConfig.sidebar.isSidebarBgImage,
+    defaultConfig.sidebar.isSidebarBgImage
   );
   const [sidebarBgImage, setSidebarImage] = useState<string | number>(
-    defaultConfig.sidebar.sidebarBgImage,
+    defaultConfig.sidebar.sidebarBgImage
   );
 
   const setSidebarBgImage = (isSidebarBgImage: boolean) => {
     updateImage(isSidebarBgImage);
   };
 
-  const updateSidebarBgImage =
-    (sidebarBgImage: string | number) => {
-      setSidebarImage(sidebarBgImage);
-    };
+  const updateSidebarBgImage = (sidebarBgImage: string | number) => {
+    setSidebarImage(sidebarBgImage);
+  };
 
   return (
     <SidebarContext.Provider

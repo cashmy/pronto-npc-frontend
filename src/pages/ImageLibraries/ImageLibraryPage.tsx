@@ -47,7 +47,7 @@ import BaseComponents from "../../components/BaseComponents";
 import ImageLibraryAddEditDialog from "./ImageLibraryAddEditDialog";
 import ImageLibraryDspDialog from "./ImageLibraryDspDialog";
 import Notification, {
-  Notify,
+  NotifyState,
 } from "../../components/BaseComponents/Notification/Notification";
 import PageDialog from "../../components/BaseComponents/PageDialog";
 import TitleBar from "../../components/TitleBar";
@@ -81,7 +81,7 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
 
   const open = Boolean(anchorEl);
   const [data, setData] = useState<any[]>([]);
-  const [notify, setNotify] = useState<Notify>({
+  const [notify, setNotify] = useState<NotifyState>({
     isOpen: false,
     message: "",
     type: "info",

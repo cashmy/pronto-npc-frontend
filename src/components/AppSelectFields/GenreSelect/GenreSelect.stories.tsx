@@ -22,7 +22,7 @@ const meta: Meta<typeof GenreSelect> = {
     onGenreChange: {
       action: "genreChanged", // Logs to Storybook's actions tab
       description:
-        "Callback function triggered when the selected genre changes. Passes the new genre ID.",
+        "Callback function triggered when the selected genre changes. Passes an object with { id, name, icon } of the selected genre, or null if cleared.",
     },
     label: {
       control: "text",
@@ -56,16 +56,20 @@ export const Default: Story = {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [selectedId, setSelectedId] = useState(args.selectedGenreId);
 
-    const handleChange = (id: number | string | "") => {
-      setSelectedId(id);
-      args.onGenreChange(id); // Forward to Storybook action
+    // This function will be called by GenreSelect with the genreInfo object or null
+    const handleInteractiveGenreChange = (
+      genreInfo: { id: number | string | ""; name: string; icon: string } | null
+    ) => {
+      const newId = genreInfo ? genreInfo.id : "";
+      setSelectedId(newId); // Update the story's local state for selectedId
+      args.onGenreChange(genreInfo); // Call the Storybook action with the full genreInfo
     };
 
     return (
       <GenreSelect
         {...args}
         selectedGenreId={selectedId}
-        onGenreChange={handleChange}
+        onGenreChange={handleInteractiveGenreChange} // Pass the handler directly
       />
     );
   },

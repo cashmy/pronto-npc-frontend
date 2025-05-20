@@ -1,6 +1,14 @@
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import defaultConfig, { defaultTheme } from '@crema/constants/defaultConfig';
-import { LayoutDirection } from '@crema/constants/AppEnums';
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import defaultConfig, { defaultTheme } from "../../constants/defaultConfig";
+import { LayoutDirection } from "../../constants/AppEnums";
 
 export interface ThemeData {
   theme: any;
@@ -35,14 +43,14 @@ interface ThemeContextProviderProps {
 }
 
 const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({
-                                                                     children,
-                                                                   }) => {
+  children,
+}) => {
   const [theme, setTheme] = useState<any>(defaultTheme.theme);
   const [themeMode, updateThemeMode] = useState<string>(
-    defaultConfig.themeMode,
+    defaultConfig.themeMode
   );
   const [themeStyle, updateThemeStyle] = useState<string>(
-    defaultConfig.themeStyle,
+    defaultConfig.themeStyle
   );
 
   const updateTheme = (theme: any) => {
@@ -63,9 +71,9 @@ const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({
 
   useEffect(() => {
     if (theme.direction === LayoutDirection.RTL) {
-      document.body.setAttribute('dir', LayoutDirection.RTL);
+      document.body.setAttribute("dir", LayoutDirection.RTL);
     } else {
-      document.body.setAttribute('dir', LayoutDirection.LTR);
+      document.body.setAttribute("dir", LayoutDirection.LTR);
     }
   }, [theme]);
 
