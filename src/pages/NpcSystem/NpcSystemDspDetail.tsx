@@ -63,17 +63,6 @@ export const NpcSystemDspDetail: React.FC<NpcSystemDspDetailProps> = ({
   //#endregion
 
   //#region // * Handlers
-  // const handleEdit = () => {
-  //   onEdit(npcSystem);
-  //   onClose();
-  // };
-
-  // const handleDelete = () => {
-  //   setLoading(true);
-  //   onDelete(npcSystem.id);
-  //   setLoading(false);
-  //   onClose();
-  // };
   //#endregion
 
   return (
@@ -86,11 +75,9 @@ export const NpcSystemDspDetail: React.FC<NpcSystemDspDetailProps> = ({
             sx={{ display: "flex", alignItems: "center" }}
           >
             <Image
-              style={{ aspectRatio: "4/3", borderRadius: "10px" }}
-              src={
-                npcSystemRecord.npc_system_image ||
-                "/assets/images/placeholder.jpg"
-              }
+              // style={{ aspectRatio: "4/3", borderRadius: "10px" }}
+              style={{ borderRadius: "10px" }}
+              src={npcSystemRecord.npc_system_image || "/images/no_image.png"}
               alt="System Image"
               duration={3000}
               easing="cubic-bezier(0.7, 0, 0.6, 1)"

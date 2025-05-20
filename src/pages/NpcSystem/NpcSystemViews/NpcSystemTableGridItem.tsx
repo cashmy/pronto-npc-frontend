@@ -38,7 +38,6 @@ const GridCard = styled(Card)(({ theme }) => {
   return {
     borderRadius: theme.cardRadius,
     // border: `solid 1px ${theme.palette.grey[300]}`,
-    // border: `solid 1px ${theme.palette.grey[300]}`,
     position: "relative",
     padding: 16,
     cursor: "pointer",
@@ -61,14 +60,14 @@ const GridCard = styled(Card)(({ theme }) => {
 });
 const GridCardMedia = styled(CardMedia)(({ theme }) => {
   return {
-    width: "100%",
-    height: 100,
+    width: "auto",
+    height: 150,
     borderRadius: 3,
     [theme.breakpoints.up("xs")]: {
-      height: 150,
-    },
-    [theme.breakpoints.up("md")]: {
       height: 100,
+    },
+    [theme.breakpoints.up("lg")]: {
+      height: 200,
     },
   };
 });

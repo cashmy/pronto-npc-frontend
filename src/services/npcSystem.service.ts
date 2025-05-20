@@ -5,7 +5,7 @@ import { NpcSystemRecord } from "../dataModels/NpcSystem";
 import { GenreRecord } from "../dataModels/genres";
 
 // const SERVER_ROOT_URL = getBaseApiUrl();
-const API_URL_BASE = BASE_URL + "/api/npc_system/"; // API endpoint base
+const API_URL_BASE = BASE_URL + "api/npc_system/"; // API endpoint base
 const MEDIA_ROOT_URL = BASE_URL + import.meta.env.VITE_BACKEND_MEDIA_URL; // Media URL base
 
 // Helper function to adjust the npc_system_image field
