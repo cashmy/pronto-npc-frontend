@@ -1,0 +1,9 @@
+# RUN Commands
+
+## Run lint before commit
+
+npm run lint:fix
+
+## Run build before commit
+
+npm run build

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 //#region //*Imports
 import { Form, Formik, FormikHelpers } from "formik";
 import { Link as RouterLink } from "react-router-dom";
