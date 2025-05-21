@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // #region //* Imports
 import React from "react";
 import clsx from "clsx";
@@ -61,7 +62,7 @@ const NpcSystemListItemWrapper = styled(ListItem)(({ theme }) => {
 
 type NpcSystemTableListItemProps = {
   item: NpcSystemRecord;
-  checkedRecords: number[];
+  // checkedRecords: string[];
   // handleCheckBoxClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   // handleRowClick: (event: React.MouseEvent<HTMLElement>) => void;
   // handleActionMenuClick: (
@@ -72,28 +73,34 @@ type NpcSystemTableListItemProps = {
 
 const NpcSystemTableListItem: React.FC<NpcSystemTableListItemProps> = ({
   item,
-  checkedRecords,
+  // checkedRecords,
   // handleCheckBoxClick,
   // handleRowClick,
   // handleActionMenuClick,
 }) => {
-  const { itemOverrides } = useNpcSystemsContext();
+  const { itemOverrides, checkedRecords } = useNpcSystemsContext();
   const {
-    setSelectedRecord,
     setShowDetail,
     setShowAddEdit,
     setShowView,
     setAddOrEdit,
+    setSelectedRecord,
+    onDeleteConfirmDialog,
   } = useNpcSystemsActionsContext();
   const defaultNpcSystemColor = item.npc_system_color || "#3f51b5"; // Default color if not provided
   const defaultNpcSystemColorName = item.npc_system_color_name || "Default"; // Default color if not provided
+
   // TODO: Consider moving these handlers to the context
   // #region // * Handlers
   const onChangeActive = () => void {};
-  const onSelectRecordsForDelete = () => void {};
+  const onSelectRecordToDelete = (id: number) => {
+    onDeleteConfirmDialog(id);
+  };
+
   const onOpenEditRecord = (item: NpcSystemRecord) => {
     setAddOrEdit("Edit");
     setSelectedRecord(item);
+    console.log("Edit Selected Record:", item);
     setShowAddEdit(true);
   };
   const onOpenDetails = (item: NpcSystemRecord) => {
@@ -134,7 +141,7 @@ const NpcSystemTableListItem: React.FC<NpcSystemTableListItemProps> = ({
             sx={{
               color: (theme) => theme.palette.text.disabled,
             }}
-            checked={checkedRecords.includes(item.id)}
+            checked={(checkedRecords ?? []).includes(item.id)}
             // onChange={(event) => onChangeCheckedRecords(event, item.id)}
             color="primary"
             disabled={item.is_global}
@@ -291,7 +298,7 @@ const NpcSystemTableListItem: React.FC<NpcSystemTableListItemProps> = ({
           <AppItemMenu
             record={item}
             onChangeActive={onChangeActive}
-            onSelectRecordsForDelete={onSelectRecordsForDelete}
+            onSelectRecordToDelete={onSelectRecordToDelete}
             onOpenEditRecord={onOpenEditRecord}
             onDetails={() => onOpenDetails(item)}
             onView={() => onOpenView(item)}

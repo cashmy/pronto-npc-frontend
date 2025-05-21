@@ -19,6 +19,7 @@ import NpcSystemAddEdit from "../NpcSystemAddEdit";
 // import AppConfirmDialog from "../../../components/AppConfirmDialog";
 import AppContent from "../../../components/AppContainer/AppContent";
 import AppHeader from "../../../components/AppContainer/AppHeader";
+import ConfirmDialog from "../../../components/BaseComponents/ConfirmDialog";
 import PageDialog from "../../../components/BaseComponents/PageDialog";
 // * Contexts & Services
 import {
@@ -39,9 +40,15 @@ const NpcSystemViewController: React.FC = () => {
     pageView,
     addOrEdit,
     selectedRecord /* Sent back (since the pageDialog is "record" agnositic) we use it to titleColor the modals */,
+    confirmDialog,
   } = useNpcSystemsContext();
-  const { setShowAddEdit, setShowView, setSelectedRecord, setAddOrEdit } =
-    useNpcSystemsActionsContext();
+  const {
+    setShowAddEdit,
+    setShowView,
+    setSelectedRecord,
+    setAddOrEdit,
+    setConfirmDialog,
+  } = useNpcSystemsActionsContext();
 
   const [filterText, setFilterText] = useState("");
   const [checkedRecords, setCheckedRecords] = useState<number[]>([]);
@@ -115,6 +122,12 @@ const NpcSystemViewController: React.FC = () => {
       >
         <NpcSystemDspDetail npcSystemRecord={selectedRecord} />
       </PageDialog>
+
+      {/* Delete Record */}
+      <ConfirmDialog
+        confirmDialog={confirmDialog}
+        setConfirmDialog={setConfirmDialog}
+      />
     </>
   );
 };

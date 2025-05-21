@@ -79,11 +79,12 @@ const NpcSystemTableGridItem: React.FC<NpcSystemTableGridItemProps> = ({
 }) => {
   const { itemOverrides } = useNpcSystemsContext();
   const {
-    setSelectedRecord,
     setShowDetail,
     setShowView,
     setAddOrEdit,
     setShowAddEdit,
+    setSelectedRecord,
+    onDeleteConfirmDialog,
   } = useNpcSystemsActionsContext();
   const defaultNpcSystemColor = item.npc_system_color || "#3f51b5"; // Default color if not provided
   const defaultNpcSystemColorName = item.npc_system_color_name || "Default"; // Default color if not provided
@@ -92,8 +93,9 @@ const NpcSystemTableGridItem: React.FC<NpcSystemTableGridItemProps> = ({
   // #region; //* Handlers
   // TODO: Consider moving these handlers to the context
   const onChangeActive = () => void {};
-  const onSelectRecordsForDelete = () => void {};
-
+  const onSelectRecordToDelete = (id: number) => {
+    onDeleteConfirmDialog(id);
+  };
   const onChangeCheckedRecords = (
     // This is for the checkbox click
     event: React.ChangeEvent<HTMLInputElement>,
@@ -169,7 +171,7 @@ const NpcSystemTableGridItem: React.FC<NpcSystemTableGridItemProps> = ({
           <AppItemMenu
             record={item}
             onChangeActive={onChangeActive}
-            onSelectRecordsForDelete={onSelectRecordsForDelete}
+            onSelectRecordToDelete={onSelectRecordToDelete}
             onOpenEditRecord={onOpenEditRecord}
             onDetails={() => onOpenDetails(item)}
             onView={() => onOpenViews(item)}

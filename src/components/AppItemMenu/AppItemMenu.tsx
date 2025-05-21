@@ -22,7 +22,7 @@ import TextContrast from "../../helpers/getTextContrast";
 //#region // * Types
 interface AppItemMenuProps {
   record: any;
-  onSelectRecordsForDelete?: (ids: string[]) => void;
+  onSelectRecordToDelete?: (id: number) => void;
   onChangeActive?: (id: string, record: any) => void;
   onOpenEditRecord?: (record: any) => void;
   onDetails?: (record: any) => void;
@@ -58,7 +58,7 @@ const RecordActionHoverWrapper = styled("div")(() => {
 
 const AppItemMenu: React.FC<AppItemMenuProps> = ({
   record,
-  onSelectRecordsForDelete,
+  onSelectRecordToDelete,
   onChangeActive,
   onOpenEditRecord,
   onDetails,
@@ -73,7 +73,7 @@ const AppItemMenu: React.FC<AppItemMenuProps> = ({
 }) => {
   // #region // * Handlers
   const onDeleteRecord = (event: React.MouseEvent) => {
-    onSelectRecordsForDelete?.([record.id]);
+    onSelectRecordToDelete?.(record.id);
     event.stopPropagation();
   };
 

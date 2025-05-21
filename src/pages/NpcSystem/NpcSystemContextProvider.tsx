@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 // src/contexts/NpcSystemsContext.tsx
 //#region //* Imports
 import React, {
@@ -14,19 +15,22 @@ import React, {
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AxiosResponse } from "axios"; // Import AxiosResponse for explicit typing
+import useAxiosPrivate from "../../hooks/useAxiosPrivate"; // Import useAxiosPrivate
+// * Services & Types
 import createNpcSystemService, {
   NpcSystemQueryParams,
   PaginatedNpcSystemsResponse,
 } from "../../services/npcSystem.service";
 import { NpcSystemRecord, npcSystemRecord } from "../../dataModels/NpcSystem";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate"; // Import useAxiosPrivate
+import ConfirmDialogState from "../../types/ConfirmDialogState";
 
+// * Local Imports
 // Grid or List view type
 import { PageViewType } from "../../components/BaseComponents/ViewSelectButtons/ViewSelectButtons";
 import { NotifyState } from "../../components/BaseComponents/Notification/Notification";
 //#endregion
 
-// 1. Define Types for Context State (remains the same)
+//#region //* Type Declarations
 type AddOrEdit = "Add" | "Edit";
 
 type NpcSystemItemOverrides = {
@@ -56,6 +60,9 @@ interface NpcSystemsContextState {
   selectedRecord: NpcSystemRecord;
   addOrEdit: AddOrEdit;
   itemOverrides?: NpcSystemItemOverrides;
+  confirmDialog: ConfirmDialogState;
+  checkedRecords?: number[];
+  selectedRecordId?: number;
 }
 
 interface NpcSystemsActionsContextState {
@@ -84,17 +91,23 @@ interface NpcSystemsActionsContextState {
   setShowView: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedRecord: React.Dispatch<React.SetStateAction<NpcSystemRecord>>;
   setAddOrEdit: React.Dispatch<React.SetStateAction<AddOrEdit>>;
+  setConfirmDialog: React.Dispatch<React.SetStateAction<ConfirmDialogState>>;
+  setCheckedRecords: React.Dispatch<React.SetStateAction<number[]>>;
+  setSelectedRecordId: React.Dispatch<React.SetStateAction<number>>;
+  onDeleteConfirmDialog: (id: number) => void;
 }
+//#endregion
 
-// 2. Create Contexts (remains the same)
+//#region //* Create the Contexts
 const NpcSystemsContext = createContext<NpcSystemsContextState | undefined>(
   undefined
 );
 const NpcSystemsActionsContext = createContext<
   NpcSystemsActionsContextState | undefined
 >(undefined);
+//#endregion
 
-// 3. Custom Hooks for easy access (remains the same)
+//#region //* Setup the Hooks
 export const useNpcSystemsContext = (): NpcSystemsContextState => {
   const context = useContext(NpcSystemsContext);
   if (context === undefined) {
@@ -115,11 +128,15 @@ export const useNpcSystemsActionsContext =
     }
     return context;
   };
+//#endregion
 
-// 4. Define Provider Props (remains the same)
+//#region //* Provider Props
 interface NpcSystemsContextProviderProps {
   children: ReactNode;
 }
+//#endregion
+
+//#region //* Provider Component
 
 // 5. The Provider Component
 export const NpcSystemsContextProvider: React.FC<
@@ -137,6 +154,7 @@ export const NpcSystemsContextProvider: React.FC<
   const [pageView, setPageView] = useState<PageViewType>("list");
   const [page, setPage] = useState<number>(1);
   const [recordsList, setRecordsList] = useState<NpcSystemRecord[]>([]);
+  const [checkedRecords, setCheckedRecords] = useState<number[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
@@ -144,6 +162,7 @@ export const NpcSystemsContextProvider: React.FC<
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const [showView, setShowView] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedRecordId, setSelectedRecordId] = useState<number>(0);
   const [selectedRecord, setSelectedRecord] =
     useState<NpcSystemRecord>(npcSystemRecord);
   const [notify, setNotify] = useState<NotifyState>({
@@ -152,6 +171,16 @@ export const NpcSystemsContextProvider: React.FC<
     type: "info",
   });
   const [addOrEdit, setAddOrEdit] = useState<AddOrEdit>("Add");
+  const [confirmDialog, setConfirmDialog] = useState<ConfirmDialogState>({
+    isOpen: false,
+    title: "Delete NPC System(s)",
+    subTitle:
+      "Are you sure you want to delete this NPC System(s) and the associated data?",
+    // onConfirm: () => handleConfirmedDelete(),
+    // title: "",
+    // subTitle: "",
+    onConfirm: () => {},
+  });
   const itemOverrides: NpcSystemItemOverrides = {
     overrideAdd: false, // Allow Add
     overrideCopy: true, // Allow Copy
@@ -243,6 +272,7 @@ export const NpcSystemsContextProvider: React.FC<
     });
     fetchNpcSystems(); // Use context action to refetch
   };
+
   const onPageChange = (newPage: number) => {
     setPage(newPage);
   };
@@ -302,26 +332,37 @@ export const NpcSystemsContextProvider: React.FC<
       setLoading(false);
     }
   };
-  const deleteNpcSystem = async (id: number): Promise<boolean> => {
-    setLoading(true);
-    setError(null);
-    try {
-      // npcSystemService.deleteRecord returns Promise<any> (data from response)
-      await npcSystemService.deleteRecord(id);
-      fetchNpcSystems();
-      return true;
-    } catch (err: any) {
-      console.error("Failed to delete NPC System:", err);
-      const errorMessage =
-        err.response?.data?.message ||
-        err.message ||
-        "Failed to delete NPC System.";
-      setError(errorMessage);
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
+
+  const deleteNpcSystem = useCallback(
+    async (id: number): Promise<boolean> => {
+      setLoading(true);
+      setError(null);
+      try {
+        await npcSystemService.deleteRecord(id);
+        fetchNpcSystems(); // Refetch after delete
+        setNotify({
+          isOpen: true,
+          message: "NPC System deleted successfully.",
+          type: "success",
+        });
+        setCheckedRecords((prev) => prev.filter((rId) => rId !== id));
+        return true;
+      } catch (err: any) {
+        console.error("Failed to delete NPC System:", err);
+        const errorMessage =
+          err.response?.data?.message ||
+          err.message ||
+          "Failed to delete NPC System.";
+        setError(errorMessage);
+        setNotify({ isOpen: true, message: errorMessage, type: "error" });
+        return false;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [npcSystemService, fetchNpcSystems] // setNotify, setCheckedRecords are stable
+  );
+
   const patchNpcSystemStatus = async (
     id: number,
     status: string
@@ -346,6 +387,32 @@ export const NpcSystemsContextProvider: React.FC<
       setLoading(false);
     }
   };
+
+  const onDeleteConfirmDialog = useCallback(
+    (idToConfirm: number) => {
+      setSelectedRecordId(idToConfirm);
+      setConfirmDialog({
+        isOpen: true,
+        title: "Confirm Deletion",
+        subTitle: `Are you sure you want to delete NPC System with ID ${idToConfirm} and its associated data? This action cannot be undone.`,
+        onConfirm: async () => {
+          console.log("Confirmed delete for ID:", idToConfirm);
+          const success = await deleteNpcSystem(idToConfirm);
+          // const success = true;
+          if (success) {
+            setSelectedRecordId(0); // Reset if deletion was successful
+          }
+          // Always close the dialog
+          setConfirmDialog((prev) => ({
+            ...prev,
+            isOpen: false,
+            onConfirm: () => {},
+          }));
+        },
+      });
+    },
+    [deleteNpcSystem]
+  ); // deleteNpcSystem is memoized, setSelectedRecordId & setConfirmDialog are stable
   //#endregion
 
   return (
@@ -366,6 +433,9 @@ export const NpcSystemsContextProvider: React.FC<
         selectedRecord,
         addOrEdit,
         itemOverrides,
+        confirmDialog,
+        checkedRecords,
+        selectedRecordId,
       }}
     >
       <NpcSystemsActionsContext.Provider
@@ -385,6 +455,10 @@ export const NpcSystemsContextProvider: React.FC<
           setShowView,
           setSelectedRecord,
           setAddOrEdit,
+          setConfirmDialog,
+          setCheckedRecords,
+          setSelectedRecordId,
+          onDeleteConfirmDialog,
         }}
       >
         {children}
