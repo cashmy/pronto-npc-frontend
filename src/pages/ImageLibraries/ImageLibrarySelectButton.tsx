@@ -1,4 +1,7 @@
-import React, { useEffect, useState, useId } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+//#region //* Imports
+import React, { useEffect, useState, useId, useMemo, useRef } from "react";
+// * Mui
 import {
   Button,
   Dialog,
@@ -15,9 +18,14 @@ import {
   Box,
   IconButton,
 } from "@mui/material";
+// * Icons
 import CloseIcon from "@mui/icons-material/Close";
-import ImageService from "../../services/images.service";
+// * Services & Data Models
+import createImageService from "../../services/images.service";
 import { ImageSelectRecord } from "../../dataModels/images";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate"; // Import useAxiosPrivate
+import { AxiosError } from "axios";
+// #endregion
 
 export interface ImageLibrarySelectButtonProps {
   imageType: string;
@@ -42,6 +50,12 @@ const ImageLibrarySelectButton: React.FC<ImageLibrarySelectButtonProps> = ({
   customId,
   ButtonProps,
 }) => {
+  const axiosPrivateInstance = useAxiosPrivate();
+  const effectRan = useRef(false);
+  const imageService = useMemo(() => {
+    return createImageService(axiosPrivateInstance);
+  }, [axiosPrivateInstance]);
+
   const [images, setImages] = useState<ImageSelectRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -61,26 +75,39 @@ const ImageLibrarySelectButton: React.FC<ImageLibrarySelectButtonProps> = ({
       setLoading(false);
       return;
     }
+    if (effectRan.current === false) {
+      const fetchImages = async () => {
+        setLoading(true);
+        setFetchError(null);
+        try {
+          const response = await imageService.getRecordsForSelect(
+            imageType,
+            ownerId
+          );
+          setImages(response.data);
+          setFetchError(null);
+        } catch (err) {
+          console.error("Failed to fetch images for select:", err);
+          let errorMessage = "Failed to load images. Please try again later.";
+          if (err instanceof AxiosError && err.response?.data?.detail) {
+            errorMessage = err.response.data.detail;
+          } else if (err instanceof AxiosError && err.message) {
+            errorMessage = err.message;
+          } else if (err instanceof Error) {
+            errorMessage = err.message;
+          }
+          setFetchError(errorMessage);
+          setImages([]);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    const fetchImages = async () => {
-      setLoading(true);
-      setFetchError(null);
-      try {
-        const response = await ImageService.getRecordsForSelect(
-          imageType,
-          ownerId
-        );
-        setImages(response.data);
-      } catch (err) {
-        console.error("Failed to fetch images for select:", err);
-        setFetchError("Failed to load images.");
-        setImages([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchImages();
+      fetchImages();
+      return () => {
+        effectRan.current = true; // Cleanup function to set effectRan to true
+      };
+    }
   }, [imageType, ownerId, dialogOpen]);
 
   const handleOpenDialog = () => {

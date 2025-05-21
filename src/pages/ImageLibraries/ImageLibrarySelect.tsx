@@ -1,4 +1,7 @@
-import React, { useEffect, useState, useId } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+//#region //* Imports
+import React, { useEffect, useState, useId, useMemo, useRef } from "react";
+// * Mui
 import {
   Select,
   MenuItem,
@@ -10,8 +13,12 @@ import {
   SelectChangeEvent,
   FormHelperText,
 } from "@mui/material";
-import ImageService from "../../services/images.service";
+// * Services & Data Models
+import createImageService from "../../services/images.service";
 import { ImageSelectRecord } from "../../dataModels/images";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate"; // Import useAxiosPrivate
+import { AxiosError } from "axios";
+//#endregion
 
 export interface ImageLibrarySelectProps {
   imageType: string;
@@ -42,9 +49,15 @@ const ImageLibrarySelect: React.FC<ImageLibrarySelectProps> = ({
   name,
   customId,
 }) => {
+  const axiosPrivateInstance = useAxiosPrivate();
+  const effectRan = useRef(false);
+  const imageService = useMemo(() => {
+    return createImageService(axiosPrivateInstance);
+  }, [axiosPrivateInstance]);
+
   const [images, setImages] = useState<ImageSelectRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [fetchError, setFetchError] = useState<string | null>(null);
+  const [fetchDataError, setFetchDataError] = useState<string | null>(null);
 
   const reactId = useId();
   const componentId = customId || reactId;
@@ -53,29 +66,42 @@ const ImageLibrarySelect: React.FC<ImageLibrarySelectProps> = ({
   useEffect(() => {
     if (!imageType || !ownerId) {
       setImages([]);
-      setFetchError(null); // Clear previous errors if inputs are cleared
+      setFetchDataError(null); // Clear previous errors if inputs are cleared
       return;
     }
+    if (effectRan.current === false) {
+      const fetchImages = async () => {
+        setLoading(true);
+        setFetchDataError(null);
+        try {
+          const response = await imageService.getRecordsForSelect(
+            imageType,
+            ownerId
+          );
+          setImages(response.data);
+          setFetchDataError(null); // Clear any previous error
+        } catch (err) {
+          console.error("Failed to fetch images for select:", err);
+          let errorMessage = "Failed to load images. Please try again later.";
+          if (err instanceof AxiosError && err.response?.data?.detail) {
+            errorMessage = err.response.data.detail;
+          } else if (err instanceof AxiosError && err.message) {
+            errorMessage = err.message;
+          } else if (err instanceof Error) {
+            errorMessage = err.message;
+          }
+          setFetchDataError(errorMessage);
+          setImages([]);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    const fetchImages = async () => {
-      setLoading(true);
-      setFetchError(null);
-      try {
-        const response = await ImageService.getRecordsForSelect(
-          imageType,
-          ownerId
-        );
-        setImages(response.data);
-      } catch (err) {
-        console.error("Failed to fetch images for select:", err);
-        setFetchError("Failed to load images.");
-        setImages([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchImages();
+      fetchImages();
+      return () => {
+        effectRan.current = true; // Cleanup function to set effectRan to true
+      };
+    }
   }, [imageType, ownerId]);
 
   const handleChange = (event: SelectChangeEvent<string>) => {
@@ -86,7 +112,7 @@ const ImageLibrarySelect: React.FC<ImageLibrarySelectProps> = ({
     if (loading) {
       return <Typography variant="body2">Loading images...</Typography>;
     }
-    if (fetchError && !images.length) {
+    if (fetchDataError && !images.length) {
       // Only show error in renderValue if list is empty
       return (
         <Typography variant="body2" color="error">
@@ -110,7 +136,7 @@ const ImageLibrarySelect: React.FC<ImageLibrarySelectProps> = ({
   return (
     <FormControl
       fullWidth={fullWidth}
-      error={error || !!fetchError}
+      error={error || !!fetchDataError}
       variant={variant}
     >
       <InputLabel id={labelId}>{label}</InputLabel>
@@ -130,13 +156,13 @@ const ImageLibrarySelect: React.FC<ImageLibrarySelectProps> = ({
               <CircularProgress size={24} />
             </MenuItem>
           )}
-        {fetchError &&
+        {fetchDataError &&
           images.length === 0 && ( // Show error only if list is empty
             <MenuItem value="" disabled>
-              <Typography color="error">{fetchError}</Typography>
+              <Typography color="error">{fetchDataError}</Typography>
             </MenuItem>
           )}
-        {!loading && !fetchError && images.length === 0 && (
+        {!loading && !fetchDataError && images.length === 0 && (
           <MenuItem value="" disabled>
             <Typography>No images found.</Typography>
           </MenuItem>
@@ -179,9 +205,9 @@ const ImageLibrarySelect: React.FC<ImageLibrarySelectProps> = ({
           </MenuItem>
         ))}
       </Select>
-      {(helperText || (fetchError && images.length === 0)) && (
-        <FormHelperText error={!!fetchError}>
-          {fetchError || helperText}
+      {(helperText || (fetchDataError && images.length === 0)) && (
+        <FormHelperText error={!!fetchDataError}>
+          {fetchDataError || helperText}
         </FormHelperText>
       )}
     </FormControl>

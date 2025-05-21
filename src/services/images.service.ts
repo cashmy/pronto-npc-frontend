@@ -1,22 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// * src/services/ImageService.ts
-import axios, { AxiosResponse } from "axios";
+// * src/services/images.service.ts
+import { type AxiosInstance, type AxiosResponse } from "axios";
+import { API_URL_BASE as BASE_URL } from "../api/axios";
 import { ImageRecord, ImageSelectRecord } from "../dataModels/images"; // Adjusted path
-import authHeader from "./authHeader";
 
-const getBaseApiUrl = (): string => {
-  // const url = process.env.BASE_API_URL;
-  const url = "http://localhost:8000";
-  if (!url) {
-    console.warn(
-      "BASE_API_URL is not defined. Using a default fallback: http://localhost:8000/api/"
-    );
-    return "http://localhost:8000/api/"; // Provide a sensible default for local dev
-  }
-  return url.endsWith("/") ? url : `${url}/`;
-};
-
-const API_URL_BASE = getBaseApiUrl() + "api/images/"; // Matching your original service
+const API_URL_BASE = BASE_URL + "api/images/"; // API endpoint base
 
 export interface ImageQueryParams {
   type?: string; // Example: image or other filter
@@ -24,64 +12,49 @@ export interface ImageQueryParams {
   // Add other potential query parameters specific to Image
 }
 
-class ImageService {
-  // Updated to fetch all records without pagination
-  getAllRecords(
-    params?: ImageQueryParams
-  ): Promise<AxiosResponse<ImageRecord[]>> {
-    return axios.get<ImageRecord[]>(API_URL_BASE, {
-      headers: authHeader(),
-      params: params,
-    });
-  }
+const createImageService = (axiosInstance: AxiosInstance) => {
+  return {
+    getAllRecords(
+      params?: ImageQueryParams
+    ): Promise<AxiosResponse<ImageRecord[]>> {
+      return axiosInstance.get<ImageRecord[]>(API_URL_BASE, {
+        params: params,
+      });
+    },
 
-  getRecordById(id: number): Promise<AxiosResponse<ImageRecord>> {
-    return axios.get<ImageRecord>(`${API_URL_BASE}${id}/`, {
-      headers: authHeader(),
-    });
-  }
+    getRecordById(id: number): Promise<AxiosResponse<ImageRecord>> {
+      return axiosInstance.get<ImageRecord>(`${API_URL_BASE}${id}/`, {});
+    },
 
-  // Data for adding typically excludes server-generated fields like id, created_at, updated_at
-  // image_name is also optional and likely derived or set based on image ID.
-  addRecord(
-    data: Omit<ImageRecord, "id" | "created_at" | "updated_at">
-  ): Promise<AxiosResponse<ImageRecord>> {
-    return axios.post<ImageRecord>(API_URL_BASE, data, {
-      headers: authHeader(),
-    });
-  }
+    addRecord(
+      data: Omit<ImageRecord, "id" | "created_at" | "updated_at">
+    ): Promise<AxiosResponse<ImageRecord>> {
+      return axiosInstance.post<ImageRecord>(API_URL_BASE, data);
+    },
 
-  // Matching original signature: takes the full ImageRecord data object
-  // The promise resolves with the updated ImageRecord data directly (after .then(r => r.data))
-  updateRecord(data: ImageRecord): Promise<ImageRecord> {
-    return axios
-      .put<ImageRecord>(`${API_URL_BASE}${data.id}/`, data, {
-        headers: authHeader(),
-      })
-      .then((response) => response.data);
-  }
+    updateRecord(data: ImageRecord): Promise<ImageRecord> {
+      return axiosInstance
+        .put<ImageRecord>(`${API_URL_BASE}${data.id}/`, data)
+        .then((response) => response.data);
+    },
 
-  // Matching original signature:
-  // The promise resolves with the response data directly (after .then(r => r.data))
-  deleteRecord(id: number): Promise<any> {
-    // API might return empty or status
-    return axios
-      .delete(`${API_URL_BASE}${id}/`, { headers: authHeader() })
-      .then((response) => response.data); // Or just resolve if no meaningful data
-  }
+    deleteRecord(id: number): Promise<any> {
+      // API might return empty or status
+      return axiosInstance
+        .delete(`${API_URL_BASE}${id}/`)
+        .then((response) => response.data);
+    },
 
-  getRecordsForSelect(
-    image_type: string,
-    owner: string
-  ): Promise<AxiosResponse<ImageSelectRecord[]>> {
-    // Name might not be unique, so expect array
-    return axios.get<ImageSelectRecord[]>(
-      `${API_URL_BASE}options/${image_type}/${owner}/`,
-      {
-        headers: authHeader(),
-      }
-    );
-  }
-}
+    getRecordsForSelect(
+      image_type: string,
+      owner: string
+    ): Promise<AxiosResponse<ImageSelectRecord[]>> {
+      // Name might not be unique, so expect array
+      return axiosInstance.get<ImageSelectRecord[]>(
+        `${API_URL_BASE}options/${image_type}/${owner}/`
+      );
+    },
+  };
+};
 
-export default new ImageService();
+export default createImageService;
