@@ -87,7 +87,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
         <Typography variant="subtitle1" gutterBottom sx={paragraphSpacing}>
           <strong>Last Updated:</strong> {lastUpdatedDate}
         </Typography>
-        <Typography paragraph sx={paragraphSpacing}>
+        <Typography component="p" sx={paragraphSpacing}>
           Welcome to Pronto NPC Generator! These Terms and Conditions ("Terms")
           govern your access to and use of the Pronto NPC Generator web
           application, including any content, functionality, and services
@@ -105,7 +105,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           focuses on creating characters with depth by generating crucial
           elements such as desires, flaws, motivations, and connections.
         </Typography>
-        <Typography paragraph sx={paragraphSpacing}>
+        <Typography component="p" sx={paragraphSpacing}>
           Please read these Terms carefully before you start to use the Service.
           By using the Service, or by clicking to accept or agree to the Terms
           when this option is made available to you, you accept and agree to be
@@ -118,7 +118,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography variant="h5" component="h2" gutterBottom>
             1. Description of Service
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             Pronto NPC Generator provides users with tools to generate detailed
             character profiles, including but not limited to, their desires,
             flaws, motivations, and interpersonal connections. These generated
@@ -132,21 +132,21 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography variant="h5" component="h2" gutterBottom>
             2. User Accounts
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Account Creation:</strong> To access certain features of the
             Service, you may be required to create an account. You agree to
             provide accurate, current, and complete information during the
             registration process and to update such information to keep it
             accurate, current, and complete.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Account Responsibility:</strong> You are responsible for
             safeguarding your account password and for any activities or actions
             under your account, whether or not you have authorized such
             activities or actions. You agree to notify us immediately of any
             unauthorized use of your account.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Eligibility:</strong> You must be at least{" "}
             {userAgeRequirement} to use the Service. If you are under the age of
             majority in your jurisdiction, you may only use the Service with the
@@ -158,7 +158,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography variant="h5" component="h2" gutterBottom>
             3. User Inputs and Content
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Responsibility for Inputs:</strong> You are solely
             responsible for any information, text, prompts, or other materials
             you provide or upload to the Service ("User Inputs"). You represent
@@ -167,7 +167,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
             or infringe upon the rights of any third party, including
             intellectual property rights and privacy rights.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Prohibited Inputs:</strong> You agree not to provide User
             Inputs that are unlawful, harmful, threatening, abusive, harassing,
             defamatory, vulgar, obscene, libelous, invasive of another's
@@ -175,7 +175,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
             objectionable. You also agree not to input personal data of third
             parties without their explicit consent.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>License to User Inputs:</strong> By providing User Inputs to
             the Service, you grant Pronto NPC Generator a worldwide,
             non-exclusive, royalty-free, sublicensable, and transferable license
@@ -192,7 +192,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography variant="h5" component="h2" gutterBottom>
             4. Generated Characters (Outputs)
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Nature of Generated Content:</strong> You acknowledge that
             the characters generated by the Service ("Generated Characters" or
             "Outputs") are created by an algorithmic process. While we strive to
@@ -202,14 +202,14 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
             occasionally be repetitive, incomplete, or not perfectly align with
             your expectations.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Use of Generated Characters:</strong> Subject to your
             compliance with these Terms, Pronto NPC Generator grants you a
             worldwide, non-exclusive, royalty-free license to use the Generated
             Characters for your personal and commercial creative projects, such
             as RPG campaigns, stories, and other literary or artistic works.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>No Guarantee of Uniqueness:</strong> Due to the nature of
             generative AI, similar User Inputs may result in similar or
             identical Generated Characters for different users. You understand
@@ -218,7 +218,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
             Generated Characters created for you and those created for other
             users.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Disclaimer:</strong> The Generated Characters are provided
             "as is" and for creative inspiration. They are not intended to
             provide advice or information that should be relied upon without
@@ -232,7 +232,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography variant="h5" component="h2" gutterBottom>
             5. Intellectual Property Rights
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Our Intellectual Property:</strong> The Service and its
             entire contents, features, and functionality (including but not
             limited to all information, software, text, displays, images, video,
@@ -248,12 +248,12 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
             Service, except as incidentally necessary to use the Service as
             intended.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Your Content:</strong> Subject to the license granted to us
             for User Inputs, you retain any intellectual property rights you may
             have in your original User Inputs.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Ownership of Generated Characters:</strong> While you are
             granted a broad license to use the Generated Characters as described
             in Section 4, you acknowledge that:
@@ -285,7 +285,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
               </Typography>
             </ListItem>
           </List>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Feedback:</strong> If you provide us with any feedback,
             suggestions, or ideas regarding the Service ("Feedback"), you hereby
             grant us a perpetual, irrevocable, worldwide, royalty-free,
@@ -323,7 +323,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography variant="h5" component="h2" gutterBottom>
             7. Fees and Payment (If Applicable)
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             If any part of the Service requires payment of fees (e.g.,
             subscription plans), you agree to pay all applicable fees as
             described on the Service. All fees are non-refundable except as
@@ -341,7 +341,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography variant="h5" component="h2" gutterBottom>
             8. Data Privacy
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             Your privacy is important to us. Our{" "}
             <MuiLink
               component={RouterLink}
@@ -361,25 +361,25 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography variant="h5" component="h2" gutterBottom>
             9. Term and Termination
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Term:</strong> These Terms will remain in full force and
             effect while you use the Service.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Termination by You:</strong> You may terminate your account
             and these Terms at any time by{" "}
             {/* Replace with actual procedure, e.g., "contacting us at " */}
             <MuiLink href={`mailto:${contactEmail}`}>{contactEmail}</MuiLink>
             {/* or "using the account deletion feature in your account settings". */}
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Termination by Us:</strong> We may suspend or terminate your
             access to all or any part of the Service at any time, with or
             without cause, with or without notice, effective immediately.
             Reasons for termination may include, but are not limited to, your
             breach of these Terms.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Effect of Termination:</strong> Upon termination, all
             licenses and rights granted to you under these Terms will
             immediately cease. Provisions that, by their nature, should survive
@@ -393,7 +393,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography variant="h5" component="h2" gutterBottom>
             10. Disclaimers
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             THE SERVICE AND THE GENERATED CHARACTERS ARE PROVIDED ON AN "AS IS"
             AND "AS AVAILABLE" BASIS, WITHOUT ANY WARRANTIES OF ANY KIND, EITHER
             EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED
@@ -401,7 +401,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
             NON-INFRINGEMENT, AND ANY WARRANTIES ARISING OUT OF COURSE OF
             DEALING OR USAGE OF TRADE.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             PRONTO NPC GENERATOR DOES NOT WARRANT THAT THE SERVICE WILL BE
             UNINTERRUPTED, SECURE, OR ERROR-FREE; NOR DOES IT MAKE ANY WARRANTY
             AS TO THE ACCURACY, COMPLETENESS, RELIABILITY, OR QUALITY OF THE
@@ -416,7 +416,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography variant="h5" component="h2" gutterBottom>
             11. Limitation of Liability
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT WILL
             PRONTO NPC GENERATOR, ITS AFFILIATES, LICENSORS, SERVICE PROVIDERS,
             EMPLOYEES, AGENTS, OFFICERS, OR DIRECTORS BE LIABLE FOR DAMAGES OF
@@ -431,7 +431,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
             CAUSED BY TORT (INCLUDING NEGLIGENCE), BREACH OF CONTRACT, OR
             OTHERWISE, EVEN IF FORESEEABLE.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             OUR TOTAL LIABILITY TO YOU FOR ALL CLAIMS ARISING FROM OR RELATING
             TO THE SERVICE OR THE GENERATED CHARACTERS IS LIMITED TO THE GREATER
             OF (A) THE AMOUNT PAID BY YOU, IF ANY, FOR ACCESSING THE SERVICE
@@ -444,7 +444,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography variant="h5" component="h2" gutterBottom>
             12. Indemnification
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             You agree to defend, indemnify, and hold harmless Pronto NPC
             Generator, its affiliates, licensors, and service providers, and its
             and their respective officers, directors, employees, contractors,
@@ -463,7 +463,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography variant="h5" component="h2" gutterBottom>
             13. Modifications to Terms
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             We reserve the right, at our sole discretion, to modify or replace
             these Terms at any time. If a revision is material, we will provide
             at least {noticePeriodForChanges} notice prior to any new terms
@@ -479,7 +479,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography variant="h5" component="h2" gutterBottom>
             14. Governing Law and Dispute Resolution
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             These Terms and any dispute or claim arising out of, or related to
             them, their subject matter, or their formation (in each case,
             including non-contractual disputes or claims) shall be governed by
@@ -488,7 +488,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
             without giving effect to any choice or conflict of law provision or
             rule.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             Any legal suit, action, or proceeding arising out of, or related to,
             these Terms or the Service shall be instituted exclusively in the
             federal courts of the United States or the courts of{" "}
@@ -496,7 +496,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
             waive any and all objections to the exercise of jurisdiction over
             you by such courts and to venue in such courts.
           </Typography>
-          {/* <Typography paragraph sx={paragraphSpacing}>
+          {/* <Typography component="p" sx={paragraphSpacing}>
             [Optional: Consider adding an arbitration clause or a clause for informal dispute resolution first.]
           </Typography> */}
         </Box>
@@ -505,14 +505,14 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
           <Typography variant="h5" component="h2" gutterBottom>
             15. Miscellaneous
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Entire Agreement:</strong> These Terms and our Privacy
             Policy constitute the sole and entire agreement between you and
             Pronto NPC Generator regarding the Service and supersede all prior
             and contemporaneous understandings, agreements, representations, and
             warranties, both written and oral, regarding the Service.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Waiver and Severability:</strong> No waiver by Pronto NPC
             Generator of any term or condition set out in these Terms shall be
             deemed a further or continuing waiver of such term or condition or a
@@ -525,7 +525,7 @@ const TermsAndConditionsPage: React.FC<TermsAndConditionsPageProps> = ({
             extent such that the remaining provisions of the Terms will continue
             in full force and effect.
           </Typography>
-          <Typography paragraph sx={paragraphSpacing}>
+          <Typography component="p" sx={paragraphSpacing}>
             <strong>Assignment:</strong> You may not assign any of your rights
             or delegate any of your obligations under these Terms without our
             prior written consent. Any purported assignment or delegation in

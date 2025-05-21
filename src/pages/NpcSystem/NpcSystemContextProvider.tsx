@@ -173,6 +173,7 @@ export const NpcSystemsContextProvider: React.FC<
     async (queryParams?: NpcSystemQueryParams) => {
       setLoading(true);
       setError(null);
+      console.log("==> Fetching NPC Systems ");
       try {
         const params: NpcSystemQueryParams = {
           page: page,
@@ -185,7 +186,6 @@ export const NpcSystemsContextProvider: React.FC<
           if (type) params.type = type;
           if (nameFilter) params.name = nameFilter;
         }
-
         // Explicitly typing the response variable
         const response: AxiosResponse<PaginatedNpcSystemsResponse> =
           await npcSystemService.getAllRecords(params);
@@ -230,6 +230,7 @@ export const NpcSystemsContextProvider: React.FC<
   }, [allParamsRaw]);
 
   useEffect(() => {
+    console.log("==> Fetching Npc USE EFFECT:", page, allParamsRaw);
     fetchNpcSystems();
   }, [page, allParamsRaw, fetchNpcSystems]);
 

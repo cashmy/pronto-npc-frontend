@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // src/components/GenreSelect/GenreSelect.tsx (or your chosen path)
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import {
   Box,
   CircularProgress, // For loading state
@@ -11,7 +12,8 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import GenreService from "../../../services/genre.service"; // Adjusted path
+import createGenreService from "../../../services/genre.service"; // Adjusted path
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate"; // Import useAxiosPrivate
 import type { GenreSelectRecord } from "../../../dataModels/genres"; // Adjusted path
 import { AxiosError } from "axios";
 
@@ -39,34 +41,49 @@ const GenreSelect: React.FC<GenreSelectProps> = ({
   error = null,
 }) => {
   // Use GenreSelectRecord for the state
+  const axiosPrivateInstance = useAxiosPrivate(); // Get the configured Axios instance
+  const effectRan = useRef(false);
+
+  const genreService = useMemo(() => {
+    return createGenreService(axiosPrivateInstance);
+  }, [axiosPrivateInstance]);
   const [genres, setGenres] = useState<GenreSelectRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [fetchDataError, setFetchDataError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchGenres = async () => {
-      setLoading(true);
-      setFetchDataError(null);
-      try {
-        const response = await GenreService.getRecordsForSelect();
-        setGenres(response.data);
-      } catch (err) {
-        console.error("Failed to fetch genres:", err);
-        let errorMessage = "Failed to load genres. Please try again later.";
-        if (err instanceof AxiosError && err.response?.data?.detail) {
-          errorMessage = err.response.data.detail;
-        } else if (err instanceof AxiosError && err.message) {
-          errorMessage = err.message;
-        } else if (err instanceof Error) {
-          errorMessage = err.message;
-        }
-        setFetchDataError(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    };
+    // console.log("GenreSelect useEffect");
 
-    fetchGenres();
+    if (effectRan.current === false) {
+      const fetchGenres = async () => {
+        setLoading(true);
+        setFetchDataError(null);
+        try {
+          const response = await genreService.getRecordsForSelect();
+          setGenres(response.data);
+          setFetchDataError(null); // Clear any previous error
+        } catch (err) {
+          console.error("Failed to fetch genres:", err);
+          let errorMessage = "Failed to load genres. Please try again later.";
+          if (err instanceof AxiosError && err.response?.data?.detail) {
+            errorMessage = err.response.data.detail;
+          } else if (err instanceof AxiosError && err.message) {
+            errorMessage = err.message;
+          } else if (err instanceof Error) {
+            errorMessage = err.message;
+          }
+          setFetchDataError(errorMessage);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchGenres();
+
+      return () => {
+        effectRan.current = true; // Set to true to prevent running this effect again
+        // console.log("GenreSelect Cleanup function called");
+      };
+    }
   }, []); // Empty dependency array means this effect runs once on mount
 
   const handleChange = (event: SelectChangeEvent<unknown>) => {

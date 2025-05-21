@@ -5,7 +5,7 @@ import { JSX } from "react";
 const RequireAuth = (): JSX.Element => {
   const { auth } = useAuth();
   const location = useLocation();
-  console.log("RequireAuth called:", auth);
+  // console.log("RequireAuth called:", auth);
   return auth?.accessToken ? (
     <Outlet />
   ) : (

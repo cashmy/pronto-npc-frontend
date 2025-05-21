@@ -1,4 +1,5 @@
 import React from "react";
+import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
   Button,
@@ -179,10 +180,11 @@ const PricingTeaserSection: React.FC = () => {
         </Grid>
         <Box textAlign="center" mt={6}>
           <Button
+            component={RouterLink}
+            to="/pricing"
             variant="outlined"
             color="secondary"
             size="large"
-            href="/pricing-details"
           >
             View Full Pricing Details & Feature Comparison
           </Button>

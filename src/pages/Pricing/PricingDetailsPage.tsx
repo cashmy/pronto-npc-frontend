@@ -101,6 +101,12 @@ const featuresData = [
   },
   { name: "Name Generators", basic: false, standard: "5", premium: "All" },
   {
+    name: "Bulk Character Generation",
+    basic: false,
+    standard: "5 at a time",
+    premium: "Unl",
+  },
+  {
     name: "Custom Race Creation",
     basic: false,
     standard: false,
@@ -109,7 +115,7 @@ const featuresData = [
   {
     name: "AI Image Generation Prompt",
     basic: false,
-    standard: "1",
+    standard: "1/character",
     premium: "Unl",
   },
   {

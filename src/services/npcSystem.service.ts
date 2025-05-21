@@ -1,10 +1,9 @@
 // * src/services/NpcSystemService.ts
-import { type AxiosInstance, type AxiosResponse } from "axios"; // Import AxiosInstance
-import { API_URL_BASE as BASE_URL } from "../api/axios"; // Adjust the import path as necessary
+import { type AxiosInstance, type AxiosResponse } from "axios";
+import { API_URL_BASE as BASE_URL } from "../api/axios";
 import { NpcSystemRecord } from "../dataModels/NpcSystem";
 import { GenreRecord } from "../dataModels/genres";
 
-// const SERVER_ROOT_URL = getBaseApiUrl();
 const API_URL_BASE = BASE_URL + "api/npc_system/"; // API endpoint base
 const MEDIA_ROOT_URL = BASE_URL + import.meta.env.VITE_BACKEND_MEDIA_URL; // Media URL base
 
@@ -41,7 +40,6 @@ const createNpcSystemService = (axiosInstance: AxiosInstance) => {
     getAllRecords(
       params?: NpcSystemQueryParams
     ): Promise<AxiosResponse<PaginatedNpcSystemsResponse>> {
-      console.log("API_URL_BASE for getAllRecords", API_URL_BASE);
       return axiosInstance.get<PaginatedNpcSystemsResponse>(API_URL_BASE, {
         params: params,
       });
@@ -109,7 +107,6 @@ const createNpcSystemService = (axiosInstance: AxiosInstance) => {
     // Matching original signature: takes the full NpcSystemRecord data object
     // The promise resolves with the updated NpcSystemRecord data directly (after .then(r => r.data))
     updateRecord(rawData: NpcSystemRecord): Promise<NpcSystemRecord> {
-      console.log("updateRecord rawData", rawData);
       const formData = new FormData();
       type UpdateRecordData = typeof rawData;
 
@@ -171,8 +168,6 @@ const createNpcSystemService = (axiosInstance: AxiosInstance) => {
         }
       });
 
-      console.log("updateRecord formData for ID:", rawData.id, formData);
-
       return axiosInstance
         .put<NpcSystemRecord>(`${API_URL_BASE}${rawData.id}/`, formData)
         .then((response) => response.data);
@@ -189,7 +184,7 @@ const createNpcSystemService = (axiosInstance: AxiosInstance) => {
       params?: NpcSystemQueryParams
     ): Promise<AxiosResponse<PaginatedNpcSystemsResponse>> {
       return axiosInstance.get<PaginatedNpcSystemsResponse>(
-        `${API_URL_BASE}user/${userId}/`, // Added trailing slash for consistency
+        `${API_URL_BASE}user/${userId}/`,
         {
           params: params,
         }

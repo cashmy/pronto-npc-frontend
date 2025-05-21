@@ -1,22 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // * src/services/GenreService.ts
-import axios, { AxiosResponse } from "axios";
-import { GenreRecord, GenreSelectRecord } from "../dataModels/genres"; // Adjusted path
-import authHeader from "./authHeader";
+import { type AxiosInstance, type AxiosResponse } from "axios";
+import { API_URL_BASE as BASE_URL } from "../api/axios";
+import { GenreRecord, GenreSelectRecord } from "../dataModels/genres";
 
-const getBaseApiUrl = (): string => {
-  // const url = process.env.BASE_API_URL;
-  const url = "http://localhost:8000";
-  if (!url) {
-    console.warn(
-      "BASE_API_URL is not defined. Using a default fallback: http://localhost:8000/api/"
-    );
-    return "http://localhost:8000/api/"; // Provide a sensible default for local dev
-  }
-  return url.endsWith("/") ? url : `${url}/`;
-};
-
-const API_URL_BASE = getBaseApiUrl() + "api/genre/"; // Matching your original service
+const API_URL_BASE = BASE_URL + "api/genre/"; // API endpoint base
 
 export interface GenreQueryParams {
   type?: string; // Example: genre or other filter
@@ -24,65 +12,49 @@ export interface GenreQueryParams {
   // Add other potential query parameters specific to Genre
 }
 
-class GenreService {
-  // Updated to fetch all records without pagination
-  getAllRecords(
-    params?: GenreQueryParams
-  ): Promise<AxiosResponse<GenreRecord[]>> {
-    return axios.get<GenreRecord[]>(API_URL_BASE, {
-      headers: authHeader(),
-      params: params,
-    });
-  }
+const createGenreService = (axiosInstance: AxiosInstance) => {
+  return {
+    getAllRecords(
+      params?: GenreQueryParams
+    ): Promise<AxiosResponse<GenreRecord[]>> {
+      return axiosInstance.get<GenreRecord[]>(API_URL_BASE, {
+        params: params,
+      });
+    },
 
-  getRecordById(id: number): Promise<AxiosResponse<GenreRecord>> {
-    return axios.get<GenreRecord>(`${API_URL_BASE}${id}/`, {
-      headers: authHeader(),
-    });
-  }
+    getRecordById(id: number): Promise<AxiosResponse<GenreRecord>> {
+      return axiosInstance.get<GenreRecord>(`${API_URL_BASE}${id}/`, {});
+    },
 
-  // Data for adding typically excludes server-generated fields like id, created_at, updated_at
-  // genre_name is also optional and likely derived or set based on genre ID.
-  addRecord(
-    data: Omit<GenreRecord, "id" | "created_at" | "updated_at" | "genre_name">
-  ): Promise<AxiosResponse<GenreRecord>> {
-    return axios.post<GenreRecord>(API_URL_BASE, data, {
-      headers: authHeader(),
-    });
-  }
+    addRecord(
+      data: Omit<GenreRecord, "id" | "created_at" | "updated_at" | "genre_name">
+    ): Promise<AxiosResponse<GenreRecord>> {
+      return axiosInstance.post<GenreRecord>(API_URL_BASE, data, {});
+    },
 
-  // Matching original signature: takes the full GenreRecord data object
-  // The promise resolves with the updated GenreRecord data directly (after .then(r => r.data))
-  updateRecord(data: GenreRecord): Promise<GenreRecord> {
-    return axios
-      .put<GenreRecord>(`${API_URL_BASE}${data.id}/`, data, {
-        headers: authHeader(),
-      })
-      .then((response) => response.data);
-  }
+    updateRecord(data: GenreRecord): Promise<GenreRecord> {
+      return axiosInstance
+        .put<GenreRecord>(`${API_URL_BASE}${data.id}/`, data, {})
+        .then((response) => response.data);
+    },
 
-  // Matching original signature:
-  // The promise resolves with the response data directly (after .then(r => r.data))
-  deleteRecord(id: number): Promise<any> {
-    // API might return empty or status
-    return axios
-      .delete(`${API_URL_BASE}${id}/`, { headers: authHeader() })
-      .then((response) => response.data); // Or just resolve if no meaningful data
-  }
+    deleteRecord(id: number): Promise<any> {
+      // API might return empty or status
+      return axiosInstance
+        .delete(`${API_URL_BASE}${id}/`)
+        .then((response) => response.data);
+    },
 
-  getRecordsForSelect(): Promise<AxiosResponse<GenreSelectRecord[]>> {
-    // Name might not be unique, so expect array
-    return axios.get<GenreSelectRecord[]>(`${API_URL_BASE}options/`, {
-      headers: authHeader(),
-    });
-  }
+    getRecordsForSelect(): Promise<AxiosResponse<GenreSelectRecord[]>> {
+      // Name might not be unique, so expect array
+      return axiosInstance.get<GenreSelectRecord[]>(`${API_URL_BASE}options/`);
+    },
 
-  getRandomRecord(): Promise<AxiosResponse<GenreRecord[]>> {
-    // Name might not be unique, so expect array
-    return axios.get<GenreRecord[]>(`${API_URL_BASE}random-genre/`, {
-      headers: authHeader(),
-    });
-  }
-}
+    getRandomRecord(): Promise<AxiosResponse<GenreRecord[]>> {
+      // Name might not be unique, so expect array
+      return axiosInstance.get<GenreRecord[]>(`${API_URL_BASE}random-genre/`);
+    },
+  };
+};
 
-export default new GenreService();
+export default createGenreService;
