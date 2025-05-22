@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // #region //* Imports
 import React from "react";
 import clsx from "clsx";

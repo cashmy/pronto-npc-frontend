@@ -7,19 +7,25 @@ import { ImageRecord, ImageSelectRecord } from "../dataModels/images"; // Adjust
 const API_URL_BASE = BASE_URL + "api/images/"; // API endpoint base
 
 export interface ImageQueryParams {
-  type?: string; // Example: image or other filter
-  name?: string; // Example: for searching by npc_system_name
-  // Add other potential query parameters specific to Image
+  type?: string; // Image Type (?)
+  name?: string; // Example: for searching by iamge_name
+}
+
+export interface ImageResponse {
+  data: ImageRecord[];
 }
 
 const createImageService = (axiosInstance: AxiosInstance) => {
   return {
     getAllRecords(
       params?: ImageQueryParams
-    ): Promise<AxiosResponse<ImageRecord[]>> {
-      return axiosInstance.get<ImageRecord[]>(API_URL_BASE, {
-        params: params,
-      });
+    ): Promise<AxiosResponse<ImageResponse>> {
+      return axiosInstance.get<ImageResponse>(
+        `${API_URL_BASE}options/${params?.type}/1/`,
+        {
+          params: params,
+        }
+      );
     },
 
     getRecordById(id: number): Promise<AxiosResponse<ImageRecord>> {

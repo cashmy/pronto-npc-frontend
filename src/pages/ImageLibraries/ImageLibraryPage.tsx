@@ -56,7 +56,8 @@ import NoImage from "../../assets/images/no_image.png";
 
 // * Services
 import { ImageRecord } from "../../dataModels/images";
-// import { useImagesContext } from "./ImageLibraryContextProvider";
+import { useImagesContext } from "./ImageLibraryContextProvider";
+
 // import ?? API connections
 //#endregion
 
@@ -66,6 +67,7 @@ type ImageLibraryPageProps = {
 
 const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
   // #region // * State Variables
+  const { recordsList } = useImagesContext();
   const [images, setImages] = useState<any[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   // const [imageTypeState, setImageTypeState] = useState<ImageType>(imageType);
@@ -77,7 +79,7 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
   const maxNumber = 69;
   // const { loading, recordsList } = useImagesContext();
   const loading = false;
-  const recordsList = React.useMemo(() => [] as ImageRecord[], []);
+  // const recordsList = React.useMemo(() => [] as ImageRecord[], []);
 
   const open = Boolean(anchorEl);
   const [data, setData] = useState<any[]>([]);
@@ -100,6 +102,7 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
 
   // #region //* Hooks
   useEffect(() => {
+    console.log("ImageLibraryPage: recordsList", recordsList);
     if (recordsList instanceof Array) {
       setData(recordsList);
     }
@@ -367,11 +370,13 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
                           <CardMedia
                             component="img"
                             sx={selectImageSize(item.imageType)}
-                            src={item.fileUrl != "" ? item.fileUrl : NoImage}
+                            src={
+                              item.image_url != "" ? item.image_url : NoImage
+                            }
                             alt={
                               item.altText != "" && item.altText != null
-                                ? item.altText
-                                : item.fileName
+                                ? item.alt_text
+                                : item.file_name
                             }
                             onClick={() => handleSelection(item)}
                           />
@@ -386,9 +391,9 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
                             >
                               <Grid size={{ xs: 10 }}>
                                 <Typography variant="body2" sx={{}}>
-                                  {item.altText.length > 15 && item.id != 1
-                                    ? item.altText.substring(0, 14) + "..."
-                                    : item.altText}
+                                  {item.alt_text.length > 15
+                                    ? item.alt_text.substring(0, 14) + "..."
+                                    : item.alt_text}
                                 </Typography>
                               </Grid>
                               <Grid size={{ xs: 2 }}>

@@ -9,7 +9,7 @@ import {
 } from "../../constants/layoutConstants";
 import { ImageType, isImageType } from "./imageTypes";
 import ImageLibraryPage from "./ImageLibraryPage";
-// import ImagesContextProvider from "./ImageLibraryContextProvider";
+import ImagesContextProvider from "./ImageLibraryContextProvider";
 
 // Define the expected shape of the URL parameters
 type ImageLibrariesControllerProps = {
@@ -24,7 +24,7 @@ const ImageLibrariesController: React.FC<
 > = () => {
   const { navViewMode, drawerMini, isAuthenticated } = useLayoutState();
   const params = useParams<ImageLibrariesControllerProps>();
-  const rawImageType = params.imageType; // Get the raw string value
+  const rawImageType = params.imageType || "i"; // Get the raw string value
   // 1. Check if the parameter exists
   if (!rawImageType) {
     console.warn("Image type parameter is missing.");
@@ -47,25 +47,25 @@ const ImageLibrariesController: React.FC<
       : 0);
 
   return (
-    // <ImagesContextProvider>
-    <Box
-      component="main"
-      sx={{
-        flexGrow: 1,
-        p: 3,
-        ml: `${leftOffset}px`,
-        transition: (theme) =>
-          theme.transitions.create("margin-left", {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-          }),
-      }}
-    >
-      {/* Push content below the fixed AppBar */}
-      <Toolbar />
-      <ImageLibraryPage imageType={imageType} />
-    </Box>
-    // </ImagesContextProvider>
+    <ImagesContextProvider imageType={imageType}>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          ml: `${leftOffset}px`,
+          transition: (theme) =>
+            theme.transitions.create("margin-left", {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.leavingScreen,
+            }),
+        }}
+      >
+        {/* Push content below the fixed AppBar */}
+        <Toolbar />
+        <ImageLibraryPage imageType={imageType} />
+      </Box>
+    </ImagesContextProvider>
   );
 };
 
