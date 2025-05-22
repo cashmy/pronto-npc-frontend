@@ -12,6 +12,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
+import useAuth from "../../../hooks/useAuth";
 import createGenreService from "../../../services/genre.service"; // Adjusted path
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate"; // Import useAxiosPrivate
 import type { GenreSelectRecord } from "../../../dataModels/genres"; // Adjusted path
@@ -41,6 +42,7 @@ const GenreSelect: React.FC<GenreSelectProps> = ({
   error = null,
 }) => {
   // Use GenreSelectRecord for the state
+  const { auth } = useAuth(); // Get the auth object from useAuth
   const axiosPrivateInstance = useAxiosPrivate(); // Get the configured Axios instance
   const effectRan = useRef(false);
 

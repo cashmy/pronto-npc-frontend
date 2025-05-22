@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { AuthProvider } from "../../context/AuthProvider";
 import { Meta, StoryFn } from "@storybook/react";
 import { Box, Typography, Paper } from "@mui/material";
 import ImageLibrarySelectButton, {
@@ -55,45 +56,48 @@ const Template: StoryFn<ImageLibrarySelectButtonProps> = (args) => {
   };
 
   return (
-    <Paper sx={{ p: 2, width: "auto", maxWidth: 500 }}>
-      <ImageLibrarySelectButton
-        {...args}
-        value={selectedImageUrl}
-        onChange={handleImageChange}
-      />
-      {selectedImageUrl && (
-        <Box mt={2} p={1} border="1px dashed #ccc" borderRadius={1}>
-          <Typography variant="subtitle1">Preview:</Typography>
-          <Typography variant="body2" sx={{ wordBreak: "break-all", mb: 1 }}>
-            URL: {selectedImageUrl}
+    <AuthProvider>
+      <Paper sx={{ p: 2, width: "auto", maxWidth: 500 }}>
+        <ImageLibrarySelectButton
+          {...args}
+          value={selectedImageUrl}
+          onChange={handleImageChange}
+        />
+        {selectedImageUrl && (
+          <Box mt={2} p={1} border="1px dashed #ccc" borderRadius={1}>
+            <Typography variant="subtitle1">Preview:</Typography>
+            <Typography variant="body2" sx={{ wordBreak: "break-all", mb: 1 }}>
+              URL: {selectedImageUrl}
+            </Typography>
+            <Box
+              component="img"
+              src={selectedImageUrl}
+              alt="Selected Preview"
+              sx={{
+                maxWidth: "100%",
+                maxHeight: 200,
+                mt: 1,
+                border: "1px solid #ccc",
+                borderRadius: 1,
+              }}
+            />
+          </Box>
+        )}
+        {!selectedImageUrl && args.value && (
+          <Typography
+            variant="caption"
+            color="textSecondary"
+            sx={{ mt: 1, display: "block" }}
+          >
+            Note: If an initial value is provided via Storybook controls but no
+            image preview appears, it might be because the provided URL is not
+            among the fetched images for the current `imageType` and `ownerId`
+            or the component hasn't been interacted with yet to load the image
+            list.
           </Typography>
-          <Box
-            component="img"
-            src={selectedImageUrl}
-            alt="Selected Preview"
-            sx={{
-              maxWidth: "100%",
-              maxHeight: 200,
-              mt: 1,
-              border: "1px solid #ccc",
-              borderRadius: 1,
-            }}
-          />
-        </Box>
-      )}
-      {!selectedImageUrl && args.value && (
-        <Typography
-          variant="caption"
-          color="textSecondary"
-          sx={{ mt: 1, display: "block" }}
-        >
-          Note: If an initial value is provided via Storybook controls but no
-          image preview appears, it might be because the provided URL is not
-          among the fetched images for the current `imageType` and `ownerId` or
-          the component hasn't been interacted with yet to load the image list.
-        </Typography>
-      )}
-    </Paper>
+        )}
+      </Paper>
+    </AuthProvider>
   );
 };
 

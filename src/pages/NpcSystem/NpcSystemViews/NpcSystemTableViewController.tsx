@@ -59,7 +59,7 @@ const NpcSystemTableViewController: React.FC<
                 <NpcSystemTableListItem
                   key={npcSystemRecord.id}
                   item={npcSystemRecord}
-                  checkedRecords={checkedRecords}
+                  // checkedRecords={checkedRecords}
                 />
               )}
             />

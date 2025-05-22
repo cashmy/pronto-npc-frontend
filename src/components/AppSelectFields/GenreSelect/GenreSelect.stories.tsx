@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
-
+import { AuthProvider } from "../../../context/AuthProvider";
 import GenreSelect from "./GenreSelect"; // Adjust the import path as necessary
 import { Box, Typography } from "@mui/material";
 
@@ -66,11 +66,13 @@ export const Default: Story = {
     };
 
     return (
-      <GenreSelect
-        {...args}
-        selectedGenreId={selectedId}
-        onGenreChange={handleInteractiveGenreChange} // Pass the handler directly
-      />
+      <AuthProvider>
+        <GenreSelect
+          {...args}
+          selectedGenreId={selectedId}
+          onGenreChange={handleInteractiveGenreChange} // Pass the handler directly
+        />
+      </AuthProvider>
     );
   },
 };
