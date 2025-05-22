@@ -15,15 +15,13 @@ const useRefreshToken = () => {
   const refresh = async (): Promise<string> => {
     console.log("Refreshing token...");
 
-    const currentRefreshToken = (auth as AuthState | null)?.refreshToken;
+    let currentRefreshToken = (auth as AuthState | null)?.refreshToken;
 
     if (!currentRefreshToken) {
-      console.error("No refresh token available in auth state.");
-      // Depending on your error handling strategy, you might want to:
-      // 1. Throw an error to be caught by the caller (e.g., in useAxiosPrivate)
-      // 2. Redirect to login
-      // 3. Return a specific value indicating failure (would require changing Promise<string> to Promise<string | null> or similar)
-      return Promise.reject(new Error("No refresh token available."));
+      console.error(
+        "No refresh token available in auth state, using 'withCredentials'."
+      );
+      currentRefreshToken = ""; // Defaulting to blanks so that the backend will use the hidden cookie.
     }
 
     const payload = {
@@ -39,8 +37,6 @@ const useRefreshToken = () => {
     );
 
     setAuth((prev: AuthState | null) => {
-      // console.log("Refresh Response: ", response.data);
-      // console.log("Refreshed aT: ", response.data.access);
       return {
         ...(prev || {}), // Preserve existing auth state properties
         accessToken: response.data.access,

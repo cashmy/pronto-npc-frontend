@@ -8,7 +8,7 @@ export interface ImageRecord {
   file_size: number;
   mime_type: string;
   image_type: ImageType;
-  image: string; // file_url
+  image_url: string; // file_url
   thumb_nail: string; // file_url
   created_at: Date;
   updated_at: Date;
@@ -32,7 +32,7 @@ export const imageRecord: ImageRecord = {
   file_size: 0,
   mime_type: "",
   image_type: ImageType.Image, // Default to Portrait
-  image: "", // file_url
+  image_url: "", // file_url
   thumb_nail: "", // file_url
   created_at: new Date(), // Use the current date for initialization
   updated_at: new Date(), // Use the current date for initialization

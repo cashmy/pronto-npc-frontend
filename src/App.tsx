@@ -2,6 +2,9 @@ import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import { LayoutProvider } from "./context";
 import ThemeManager from "./theme/ThemeManager";
 
+import RequireAuth from "./components/RequireAuth";
+import PersistLogin from "./components/PersistLogin/PersistLogin";
+
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
 import AboutPage from "./pages/About";
 import ContactPage from "./pages/Contact";
@@ -10,7 +13,9 @@ import PricingPage from "./pages/Pricing";
 import Signup from "./pages/Signup";
 import LogIn from "./pages/LogIn";
 import NpcSystemPage from "./pages/NpcSystem";
-import RequireAuth from "./components/RequireAuth";
+import { ImageType } from "./pages/ImageLibraries/imageTypes";
+import ImageLibrariesController from "./pages/ImageLibraries/ImageLibrariesController";
+
 import Error401 from "./pages/ErrorPages/Error401";
 import Error403 from "./pages/ErrorPages/Error403";
 import Error404 from "./pages/ErrorPages/Error404";
@@ -18,9 +23,6 @@ import Error500 from "./pages/ErrorPages/Error500";
 import Error503 from "./pages/ErrorPages/Error503";
 import TermsAndConditionsPage from "./Errata/TermsAndConditions/TermsAndConditionsPage";
 import PrivacyPolicy from "./Errata/PrivacyPolicy";
-
-import { ImageType } from "./pages/ImageLibraries/imageTypes";
-import ImageLibrariesController from "./pages/ImageLibraries/ImageLibrariesController";
 // import "./App.css";
 
 // Wrapper component to pass `imageType` as a prop
@@ -67,15 +69,17 @@ const App = () => {
               {/* Image Libraries */}
 
               {/* Protected Routes */}
-              <Route element={<RequireAuth />}>
-                <Route path="/npc-system" element={<NpcSystemPage />} />
-                <Route path="/characters" element={<LandingPage />} />
-                <Route path="/tables" element={<LandingPage />} />
-                <Route
-                  path="/images/:imageType"
-                  element={<ImageLibraryWrapper />}
-                />
-                <Route path="/tutorials" element={<LandingPage />} />
+              <Route element={<PersistLogin />}>
+                <Route element={<RequireAuth />}>
+                  <Route path="/npc-system" element={<NpcSystemPage />} />
+                  <Route path="/characters" element={<LandingPage />} />
+                  <Route path="/tables" element={<LandingPage />} />
+                  <Route
+                    path="/images/:imageType"
+                    element={<ImageLibraryWrapper />}
+                  />
+                  <Route path="/tutorials" element={<LandingPage />} />
+                </Route>
               </Route>
 
               {/* Catch-all Route */}
