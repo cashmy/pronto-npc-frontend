@@ -37,6 +37,7 @@ interface ImagesContextState {
   pageView: string;
   recordsList: ImageRecord[];
   selectedRecordId?: number;
+  showView: boolean;
 }
 
 interface ImagesActionsContextState {
@@ -55,6 +56,7 @@ interface ImagesActionsContextState {
   setPageView: (view: string) => void;
   setRecordsList: React.Dispatch<React.SetStateAction<ImageRecord[]>>;
   setSelectedRecordId: React.Dispatch<React.SetStateAction<number>>;
+  setShowView: React.Dispatch<React.SetStateAction<boolean>>;
 }
 //#endregion
 
@@ -114,6 +116,8 @@ export const ImagesContextProvider: React.FC<ImagesContextProviderProps> = ({
   const [pageView, setPageView] = useState<string>("list");
   const [recordsList, setRecordsList] = useState<ImageRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [showView, setShowView] = useState<boolean>(false);
+
   const [error, setError] = useState<string | null>(null);
   const [selectedRecordId, setSelectedRecordId] = useState<number>(0);
   // & Messaging
@@ -331,13 +335,14 @@ export const ImagesContextProvider: React.FC<ImagesContextProviderProps> = ({
       value={{
         allParamsRaw,
         confirmDialog,
+        error,
         imageType: imageType || "i",
         recordsList,
         loading,
         notify,
         pageView,
         selectedRecordId,
-        error,
+        showView,
       }}
     >
       <ImagesActionsContext.Provider
@@ -355,6 +360,7 @@ export const ImagesContextProvider: React.FC<ImagesContextProviderProps> = ({
           setPageView,
           setRecordsList,
           setSelectedRecordId,
+          setShowView,
         }}
       >
         {children}

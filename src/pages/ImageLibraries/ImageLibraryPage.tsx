@@ -33,6 +33,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import DoNotDisturbAltIcon from "@mui/icons-material/DoNotDisturbAlt";
 
 import ImageTwoToneIcon from "@mui/icons-material/ImageTwoTone";
 import { IoImage, IoImages } from "react-icons/io5";
@@ -56,7 +57,10 @@ import NoImage from "../../assets/images/no_image.png";
 
 // * Services
 import { ImageRecord } from "../../dataModels/images";
-import { useImagesContext } from "./ImageLibraryContextProvider";
+import {
+  useImagesContext,
+  useImagesActionsContext,
+} from "./ImageLibraryContextProvider";
 
 // import ?? API connections
 //#endregion
@@ -67,12 +71,13 @@ type ImageLibraryPageProps = {
 
 const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
   // #region // * State Variables
-  const { recordsList } = useImagesContext();
+  const { recordsList, showView } = useImagesContext();
+  const { setShowView } = useImagesActionsContext();
   const [images, setImages] = useState<any[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   // const [imageTypeState, setImageTypeState] = useState<ImageType>(imageType);
   const [openAddEditDialog, setOpenAddEditDialog] = useState(false);
-  const [openDspDialog, setOpenDspDialog] = useState(false);
+  // const [openDspDialog, setOpenDspDialog] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState<ImageRecord | null>(null);
   const [currentItem, setCurrentItem] = useState<ImageRecord | null>(null);
 
@@ -117,6 +122,7 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
   ) => {
     imageList.forEach((image: UploadingImageType) => {
       const formData = new FormData();
+      console.log("ImageLibraryPage: image", image.file);
       if (image.file) {
         formData.append("file_name", image.file);
         formData.append("alt_text", image.file);
@@ -127,6 +133,7 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
       formData.append("mime_type", String(image.file?.type || ""));
 
       alert(`Adding image ${image.file?.name} to database file`);
+      // Todo: Add endpoint to update database
     });
     onImageRemoveAll();
   };
@@ -179,7 +186,6 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
   };
   const handleEdit = (record: ImageRecord) => {
     setRecordForEdit(record);
-    alert(`Editing image ${record.file_name} in database file`);
     setOpenAddEditDialog(true);
   };
   const handleClickEvent = (
@@ -202,7 +208,8 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
   const handleSelection = (item: ImageRecord) => {
     // selectImage(item);
     setRecordForEdit(item);
-    setOpenDspDialog(true);
+    setShowView(true);
+    // setOpenDspDialog(true);
   };
   const handleDialogClose = () => {
     setOpenAddEditDialog(false);
@@ -397,7 +404,7 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
                                 </Typography>
                               </Grid>
                               <Grid size={{ xs: 2 }}>
-                                {item.id != 1 && (
+                                {item.owner !== null && (
                                   <BaseComponents.ActionButton
                                     size="small"
                                     tooltipText="More options"
@@ -416,6 +423,16 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
                                     />
                                   </BaseComponents.ActionButton>
                                 )}
+                                {item.owner === null && (
+                                  <DoNotDisturbAltIcon
+                                    sx={{ color: "red", fontSize: 20 }}
+                                  />
+                                )}
+                                {/* {
+                                  <MoreVertIcon
+                                    sx={{ color: "grey", fontSize: 20 }}
+                                  />
+                                } */}
                               </Grid>
                             </Box>
                           </CardContent>
@@ -605,8 +622,8 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
       </PageDialog>
       {/* //& View Image */}
       <PageDialog
-        openPopup={openDspDialog}
-        setOpenPopup={handleDialogClose}
+        openPopup={showView}
+        setOpenPopup={setShowView}
         title={
           selectDialogTitle(
             (recordForEdit?.image_type as ImageType) || "default"
@@ -615,7 +632,7 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
         titleColor="#393bee"
         size={"sm"}
       >
-        <ImageLibraryDspDialog record={recordForEdit as ImageRecord} />
+        <ImageLibraryDspDialog imageRecord={recordForEdit as ImageRecord} />
       </PageDialog>
       <AppConfirmDialog
         open={confirmDialog.isOpen}

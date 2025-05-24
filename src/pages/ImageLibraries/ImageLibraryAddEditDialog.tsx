@@ -30,8 +30,8 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
 
   const validate = (fieldValues = values) => {
     const temp: Record<string, string> = { ...errors };
-    if ("altText" in fieldValues)
-      temp.altText = fieldValues.altText ? "" : "This field is required.";
+    if ("alt_text" in fieldValues)
+      temp.alt_text = fieldValues.alt_text ? "" : "This field is required.";
     setErrors({
       ...temp,
     });
@@ -111,22 +111,22 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
 
             <Grid size={{ xs: 12 }}>
               <BaseComponents.TextField
-                name="altText"
+                name="alt_text"
                 label="Title/Alt Text"
                 color="info"
                 value={values.alt_text}
                 onChange={handleInputChange}
-                error={errors.altText}
+                error={errors.alt_text}
               />
             </Grid>
             <Grid size={{ xs: 6 }}>
               <BaseComponents.TextField
-                name="mimeType"
+                name="mime_type"
                 label="File Mime Type"
                 size="small"
                 value={values.mime_type}
                 onChange={handleInputChange}
-                error={errors.mimeType}
+                error={errors.mime_type}
               />
             </Grid>
             <Grid size={{ xs: 6 }}>
@@ -136,7 +136,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
                 size="small"
                 value={values.file_size}
                 onChange={handleInputChange}
-                error={errors.fileSize}
+                error={errors.file_size}
               />
             </Grid>
           </Grid>
@@ -145,7 +145,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
             <Grid size={{ xs: 12 }} sx={{ ml: 10, mt: 5 }}>
               <Image
                 style={selectImageSize(values.image_type)}
-                src={values.image || ""}
+                src={values.image_url || ""}
                 duration={3000}
                 easing="cubic-bezier(0.7, 0, 0.6, 1)"
                 shift="bottom"

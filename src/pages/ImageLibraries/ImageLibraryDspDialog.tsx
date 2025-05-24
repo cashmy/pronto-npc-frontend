@@ -9,17 +9,18 @@ import { useState } from "react";
 import { Grid } from "@mui/material";
 import Image from "mui-image";
 import { Form } from "../../hooks/useForm";
-import { imageRecord as initialFValues } from "../../dataModels/images";
+import { ImageRecord } from "../../dataModels/images";
 
 interface ImageLibraryDspDialogProps {
-  record: typeof initialFValues;
+  imageRecord: ImageRecord;
+  // imageRecord: ImageRecord;
 }
 
 const ImageLibraryDspDialog: React.FC<ImageLibraryDspDialogProps> = ({
-  record,
+  imageRecord,
 }) => {
   const [fileObject] = useState("/assets/images/No_Image.png");
-
+  //#region // * Styles
   const selectImageSize = (imageType: string) => {
     switch (imageType) {
       case "i":
@@ -56,16 +57,31 @@ const ImageLibraryDspDialog: React.FC<ImageLibraryDspDialogProps> = ({
         };
     }
   };
+  //#endregion
 
   return (
     <>
       <Form>
         <Grid container>
-          <Grid size={{ xs: 12, md: 6 }}>
+          <Grid size={{ xs: 6, md: 6 }}>
             <Image
-              src={record.image || fileObject}
-              alt={record.alt_text}
-              style={selectImageSize(record.image_type)}
+              src={imageRecord.image_url || fileObject}
+              alt={imageRecord.alt_text}
+              style={selectImageSize(imageRecord.image_type)}
+              fit="contain"
+              duration={3000}
+              easing="cubic-bezier(0.7, 0, 0.6, 1)"
+              shift="bottom"
+              distance="100px"
+              shiftDuration={1000}
+              bgColor="inherit"
+            />
+          </Grid>
+          <Grid size={{ xs: 6, md: 6 }}>
+            <Image
+              src={imageRecord.image_url || fileObject}
+              alt={imageRecord.alt_text}
+              style={selectImageSize(imageRecord.image_type)}
               fit="contain"
               duration={3000}
               easing="cubic-bezier(0.7, 0, 0.6, 1)"
