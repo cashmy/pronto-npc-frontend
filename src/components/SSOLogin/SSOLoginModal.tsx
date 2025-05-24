@@ -18,7 +18,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LockIcon from "@mui/icons-material/Lock";
 import { useNavigate } from "react-router-dom";
-import ForgotPasswordModal from "../ForgotPassword/ForgotPasswordModal"; // Adjust path if needed
+import ForgotPasswordModal from "../ForgotPassword/ForgotPasswordModal";
 
 interface LoginModalProps {
   open: boolean;
@@ -27,7 +27,7 @@ interface LoginModalProps {
   onLoginSuccess: (token: string, user: any) => void;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({
+const SSOLoginModal: React.FC<LoginModalProps> = ({
   open,
   onClose,
   onLoginSuccess,
@@ -190,4 +190,4 @@ const LoginModal: React.FC<LoginModalProps> = ({
   );
 };
 
-export default LoginModal;
+export default SSOLoginModal;

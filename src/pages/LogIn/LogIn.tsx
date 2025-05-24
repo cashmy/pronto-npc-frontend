@@ -31,11 +31,13 @@ import {
   DRAWER_SECONDARY_FULL,
   DRAWER_SECONDARY_MINI,
 } from "../../constants/layoutConstants";
-// #endregion
 
 import useAuth from "../../hooks/useAuth";
-import axios from "../../api/axios";
+import axios from "../../api/axios"; // Used for login
+import useAxiosPrivate from "../../hooks/useAxiosPrivate"; // Used for the userStateData rtv (Adds the access token to the request)
 import { useNavigate, useLocation } from "react-router-dom";
+import { useUserStore } from "../../stores/userStores"; // Import the user store
+// #endregion
 
 const initialValues: LoginRecord = loginRecord;
 const LOGIN_URL = "/auth/login/";
@@ -55,6 +57,8 @@ const LogIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
+  const axiosPrivate = useAxiosPrivate(); // Use the axios instance with interceptors
+  const { fetchUserData } = useUserStore(); // Get the fetchUserData action
 
   const [isChecked, setIsChecked] = useToggle("pronto-npc-persist", false);
   const validationSchema = yup.object({
@@ -93,6 +97,8 @@ const LogIn = () => {
       console.log("Access Token:", accessToken, "Refresh Token:", refreshToken);
 
       setAuth({ accessToken, refreshToken });
+      await fetchUserData(axiosPrivate); // Fetch user data for the newly logged-in user
+
       navigate(from, { replace: true });
     } catch (error) {
       console.error("Login error:", error);

@@ -2,7 +2,7 @@ import { createContext } from "react";
 export type ThemeMode = "light" | "dark" | "system";
 
 export interface AuthenticatedUser {
-  id: string;
+  id: number;
   name: string;
   email: string;
   avatarUrl?: string;

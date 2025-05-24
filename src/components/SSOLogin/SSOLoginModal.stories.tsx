@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react";
-import LoginModal from "./LoginModal";
+import SSOLoginModal from "./SSOLoginModal";
 import { MemoryRouter } from "react-router-dom";
 
-const meta: Meta<typeof LoginModal> = {
-  title: "Components/LoginModal",
-  component: LoginModal,
+const meta: Meta<typeof SSOLoginModal> = {
+  title: "Components/SSOLoginModal",
+  component: SSOLoginModal,
   parameters: {
     layout: "centered",
   },
@@ -13,7 +13,7 @@ const meta: Meta<typeof LoginModal> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof LoginModal>;
+type Story = StoryObj<typeof SSOLoginModal>;
 
 const Template: React.FC = () => {
   const [open, setOpen] = useState(true);
@@ -33,7 +33,7 @@ const Template: React.FC = () => {
 
   return (
     <MemoryRouter>
-      <LoginModal
+      <SSOLoginModal
         open={open}
         onClose={() => setOpen(false)}
         onLoginSuccess={handleLoginSuccess}

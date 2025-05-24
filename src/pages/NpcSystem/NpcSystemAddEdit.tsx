@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region //* Imports
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 // * MUI Imports
 import {
   alpha,
@@ -37,12 +37,14 @@ import TextContrast from "../../helpers/getTextContrast";
 import { colorList } from "../../constants/colorList"; // Adjust path as needed
 
 // * Services & Contexts
+import useAxiosPrivate from "../../hooks/useAxiosPrivate"; // Import useAxiosPrivate
+
 // import { userRecord as currentUserRecord } from "./user"; // Import the current user record
-import GenreService from "../../services/genre.service";
 import {
   GenreRecord,
   genreRecord as defaultGenreRecord,
 } from "../../dataModels/genres";
+import createGenreService from "../../services/genre.service";
 import {
   NpcSystemRecord,
   npcSystemRecord as emptyNpcSystemRecord,
@@ -51,6 +53,7 @@ import {
   useNpcSystemsContext,
   useNpcSystemsActionsContext,
 } from "./NpcSystemContextProvider";
+import { useUserStore } from "../../stores/userStores";
 //#endregion
 
 //#region //* Style Components
@@ -82,10 +85,35 @@ const AvatarViewWrapper = styled("div")(({ theme }) => {
 //#endregion
 
 const NpcSystemAddEdit: React.FC<any> = () => {
+  const {
+    basicInfo,
+    profileInfo,
+    // usage_metrics,
+  } = useUserStore();
+
+  let name = "User";
+  if (basicInfo.username) {
+    name = basicInfo.username;
+  } else if (basicInfo.first_name && basicInfo.last_name) {
+    name = `${basicInfo.first_name} ${basicInfo.last_name}`;
+  } else if (basicInfo.first_name) {
+    name = basicInfo.first_name;
+  }
+  let initials = "U";
+  if (basicInfo.first_name && basicInfo.last_name) {
+    initials =
+      `${basicInfo.first_name[0]}${basicInfo.last_name[0]}`.toUpperCase();
+  } else if (name !== "User" && name.length > 0) {
+    initials = name[0].toUpperCase();
+  }
   //#region //* Temporary Variables (refactor to context later)
-  const userInitials = "U"; // Todo: move to context later
-  const avatarImage = "./src/assets/avatars/2.jpg"; // Todo: move to context later
-  const playerName = { firstName: "User", lastName: "User" }; // Todo: move to context later
+  const userInitials = initials; // Todo: move to context later
+  const avatarImage =
+    profileInfo?.avatar ?? "./src/assets/avatars/placeholder.jpg";
+  const userFullName = {
+    firstName: basicInfo?.first_name ?? "",
+    lastName: basicInfo?.last_name ?? "",
+  };
   const user_has_ai = Boolean(import.meta.env.VITE_AI_ACTIVATED == true); // Todo: move to context later
   //#endregion
 
@@ -159,6 +187,10 @@ const NpcSystemAddEdit: React.FC<any> = () => {
   //#endregion
 
   //#region //* Contexts
+  const axiosPrivateInstance = useAxiosPrivate();
+  const genreService = useMemo(() => {
+    return createGenreService(axiosPrivateInstance);
+  }, [axiosPrivateInstance]);
   const { addNpcSystem, updateNpcSystem, setShowAddEdit } =
     useNpcSystemsActionsContext();
 
@@ -200,7 +232,7 @@ const NpcSystemAddEdit: React.FC<any> = () => {
   const getRandomGenre = async (): Promise<GenreRecord | null> => {
     try {
       // The 'response' object here will be the full Axios response.
-      const response = await GenreService.getRandomRecord();
+      const response = await genreService.getRandomRecord();
       if (response && response.data) {
         return response.data as unknown as GenreRecord;
       }
@@ -403,7 +435,7 @@ const NpcSystemAddEdit: React.FC<any> = () => {
                   }}
                   src={avatarImage ? avatarImage : ""}
                 />
-              ) : playerName ? (
+              ) : userFullName ? (
                 <Avatar
                   sx={{
                     width: 50,
@@ -415,7 +447,7 @@ const NpcSystemAddEdit: React.FC<any> = () => {
                     fontSize: "100px",
                   }}
                 >
-                  {/* {playerName[0].toUpperCase()} */}
+                  {/* {userFullName[0].toUpperCase()} */}
                   {userInitials}
                 </Avatar>
               ) : (
@@ -442,10 +474,10 @@ const NpcSystemAddEdit: React.FC<any> = () => {
               }}
             >
               <Typography sx={{ fontStyle: "italic" }}>
-                {playerName.firstName}
+                {userFullName.firstName}
               </Typography>
               <Typography sx={{ fontStyle: "italic" }}>
-                {playerName.lastName}
+                {userFullName.lastName}
               </Typography>
             </Grid>
           </Grid>

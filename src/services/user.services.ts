@@ -1,4 +1,3 @@
 // * src/services/ImageService.ts
-// import axios, { AxiosResponse } from "axios";
-// import { ImageRecord, ImageSelectRecord } from "../dataModels/images"; // Adjusted path
-// import authHeader from "./authHeader";
+// import { type AxiosInstance, type AxiosResponse } from "axios";
+// import { API_URL_BASE as BASE_URL } from "../api/axios";

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import {
@@ -34,21 +34,17 @@ import {
   Games as SystemIcon,
   TableChart as TablesIcon,
   Description as DescriptionIcon,
-  // Person as PersonIcon,
-  // LocalPolice as LocalPoliceIcon,
-  // ArrowOutward as ArrowOutwardIcon,
-  // Shuffle as ShuffleIcon,
-  // AttachMoney as AttachMoneyIcon,
 } from "@mui/icons-material";
-import { IoImages } from "react-icons/io5"; // Adjust the import based on your icon library
+import { IoImages } from "react-icons/io5";
 import {
   DRAWER_MAIN_WIDTH,
   DRAWER_SECONDARY_FULL,
   DRAWER_SECONDARY_MINI,
 } from "../../constants/layoutConstants";
 import { useLayoutState } from "../../context";
-import LoginModal from "../Login/LoginModal"; // adjust path as needed
-import useLogout from "../../hooks/useLogout"; // adjust path as needed
+import { AuthenticatedUser, ThemeMode } from "../../context/LayoutContext";
+import useLogout from "../../hooks/useLogout";
+import { useUserStore } from "../../stores/userStores";
 
 const navItems = [
   { label: "Home", icon: <HomeIcon />, path: "/" },
@@ -83,11 +79,21 @@ const ResponsiveAppBar: React.FC = () => {
   const logout = useLogout();
 
   const {
+    basicInfo,
+    profileInfo,
+    subscriptionLevel,
+    // usage_metrics,
+  } = useUserStore();
+
+  const {
     navViewMode,
     toggleNavViewMode,
     drawerMini,
     toggleDrawerMini,
+    user,
+    setUser,
     isAuthenticated,
+    setIsAuthenticated,
   } = useLayoutState();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -99,12 +105,65 @@ const ResponsiveAppBar: React.FC = () => {
   const handleMenuClose = () => setAnchorEl(null);
   const handleLogout = async () => {
     await logout();
+    setAnchorEl(null); // Close menu
     navigate("/");
   };
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
-  const userInitials = "U"; // Todo: move to context later
   const avatarImage = "./src/assets/avatars/2.jpg"; // Todo: move to context later
+
+  // Effect to synchronize UserStore with LayoutContext
+  useEffect(() => {
+    if (basicInfo && basicInfo.id && basicInfo.email) {
+      let name = "User";
+      if (basicInfo.first_name && basicInfo.last_name) {
+        name = `${basicInfo.first_name} ${basicInfo.last_name}`;
+      } else if (basicInfo.first_name) {
+        name = basicInfo.first_name;
+      } else if (basicInfo.username) {
+        name = basicInfo.username;
+      }
+
+      let initials = "U";
+      if (basicInfo.first_name && basicInfo.last_name) {
+        initials =
+          `${basicInfo.first_name[0]}${basicInfo.last_name[0]}`.toUpperCase();
+      } else if (name !== "User" && name.length > 0) {
+        initials = name[0].toUpperCase();
+      }
+
+      const mappedUser: AuthenticatedUser = {
+        id: basicInfo.id,
+        name: name,
+        email: basicInfo.email,
+        avatarUrl: profileInfo?.avatar || undefined,
+        initials: initials,
+        themePreference: profileInfo?.theme as ThemeMode | undefined, // Cast if necessary
+      };
+
+      setUser(mappedUser);
+      setIsAuthenticated(true);
+    } else {
+      // If no basicInfo.id, user is not considered logged in
+      setUser(null);
+      setIsAuthenticated(false);
+    }
+  }, [basicInfo, profileInfo, setUser, setIsAuthenticated]);
+
+  // Derive display values from LayoutContext.user
+  interface CapFirstLetter {
+    (string: string): string;
+  }
+
+  const capFirstLetter: CapFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+  const displayName = isAuthenticated && user ? user.name : "Guest";
+  const avatarSrc = isAuthenticated && user ? user.avatarUrl : undefined;
+  const displayInitials = isAuthenticated && user ? user.initials : "G";
+  const subscripLevel =
+    isAuthenticated && user
+      ? capFirstLetter(subscriptionLevel.subscription_type)
+      : "Basic";
 
   return (
     <>
@@ -138,7 +197,6 @@ const ResponsiveAppBar: React.FC = () => {
               Pronto NPC Generator
             </Typography>
           </Box>
-
           {/* Center: Main nav */}
           {navViewMode === 0 && !isSmallScreen && (
             <Box sx={{ display: "flex", gap: 2 }}>
@@ -154,17 +212,22 @@ const ResponsiveAppBar: React.FC = () => {
               ))}
             </Box>
           )}
-
           {/* Right: Avatar/Menu */}
-          <Box>
+          <Typography variant="body2" sx={{ mr: 2, fontStyle: "italic" }}>
+            {subscripLevel}
+          </Typography>{" "}
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography variant="body2" sx={{ mr: 2 }}>
+              {displayName}
+            </Typography>
             <IconButton color="inherit" onClick={handleMenuOpen}>
               {isAuthenticated ? (
                 <Avatar
-                  alt="User Avatar"
-                  src={avatarImage}
+                  alt={displayName}
+                  src={avatarSrc}
                   sx={{ width: 32, height: 32 }}
                 >
-                  {!avatarImage ? userInitials : null}
+                  {!avatarImage ? displayInitials : null}
                 </Avatar>
               ) : (
                 <AccountCircle fontSize="large" />
@@ -188,13 +251,18 @@ const ResponsiveAppBar: React.FC = () => {
                 </div>
               ) : (
                 <div>
-                  <MenuItem onClick={handleMenuClose}>SignUp</MenuItem>
+                  <MenuItem
+                    component={Link}
+                    to="/signup"
+                    onClick={handleMenuClose}
+                  >
+                    SignUp
+                  </MenuItem>
                   <Divider />
                   <MenuItem
-                    onClick={() => {
-                      setAnchorEl(null); // Close menu
-                      setLoginModalOpen(true); // Open modal
-                    }}
+                    component={Link}
+                    to="/login"
+                    onClick={handleMenuClose}
                   >
                     Login
                   </MenuItem>
@@ -290,17 +358,6 @@ const ResponsiveAppBar: React.FC = () => {
           </List>
         </Drawer>
       )}
-      <LoginModal
-        open={loginModalOpen}
-        onClose={() => setLoginModalOpen(false)}
-        onLoginSuccess={(token, user) => {
-          localStorage.setItem("token", token);
-          console.log("User:", user);
-          // setUser(user);
-          // setIsAuthenticated(true);
-          setLoginModalOpen(false);
-        }}
-      />
     </>
   );
 };
