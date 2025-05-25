@@ -55,7 +55,7 @@ const navItems = [
 
 const navItems2 = [
   { label: "System", icon: <SystemIcon />, path: "/npc-system" },
-  { label: "Characters", icon: <GroupIcon />, path: "/pricing" },
+  { label: "Characters", icon: <GroupIcon />, path: "/characters" },
   { label: "Image Libraries", icon: <IoImages />, path: "/images/i" },
   { label: "Tables", icon: <TablesIcon />, path: "/contact" },
   { label: "Tutorials", icon: <DescriptionIcon />, path: "/about" },

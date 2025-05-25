@@ -15,6 +15,7 @@ import LogIn from "./pages/LogIn";
 import NpcSystemPage from "./pages/NpcSystem";
 import { ImageType } from "./pages/ImageLibraries/imageTypes";
 import ImageLibrariesController from "./pages/ImageLibraries/ImageLibrariesController";
+import CharactersControllerPage from "./pages/Characters/CharactersControllerPage";
 
 import Error401 from "./pages/ErrorPages/Error401";
 import Error403 from "./pages/ErrorPages/Error403";
@@ -72,7 +73,10 @@ const App = () => {
               <Route element={<PersistLogin />}>
                 <Route element={<RequireAuth />}>
                   <Route path="/npc-system" element={<NpcSystemPage />} />
-                  <Route path="/characters" element={<LandingPage />} />
+                  <Route
+                    path="/characters"
+                    element={<CharactersControllerPage />}
+                  />
                   <Route path="/tables" element={<LandingPage />} />
                   <Route
                     path="/images/:imageType"

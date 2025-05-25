@@ -40,7 +40,7 @@ const CharactersControllerPage: React.FC = () => {
       <CharactersContextProvider>
         <AppGridContainer>
           <Grid size={{ xs: 12 }} sx={{ paddingTop: "5px !important" }}>
-            <AppContainer title="Work with NPC Generator Systems" fullView>
+            <AppContainer title="Work with Characters" fullView>
               {/* <CharactersViewController /> */}
               Character views controller goes here
             </AppContainer>
