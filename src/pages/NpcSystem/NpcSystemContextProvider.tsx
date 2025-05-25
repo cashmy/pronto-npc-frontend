@@ -45,30 +45,27 @@ type NpcSystemItemOverrides = {
 };
 
 interface NpcSystemsContextState {
+  addOrEdit: AddOrEdit;
   allParamsRaw: string | null;
-  recordsList: NpcSystemRecord[];
-  totalRecords: number;
-  totalPages: number;
-  loading: boolean;
+  checkedRecords?: number[];
+  confirmDialog: ConfirmDialogState;
   error: string | null;
+  itemOverrides?: NpcSystemItemOverrides;
+  loading: boolean;
+  notify: NotifyState;
   page: number;
   pageView: PageViewType;
-  notify: NotifyState;
+  recordsList: NpcSystemRecord[];
+  selectedRecord: NpcSystemRecord;
+  selectedRecordId?: number;
   showAddEdit: boolean;
   showDetail: boolean;
   showView: boolean;
-  selectedRecord: NpcSystemRecord;
-  addOrEdit: AddOrEdit;
-  itemOverrides?: NpcSystemItemOverrides;
-  confirmDialog: ConfirmDialogState;
-  checkedRecords?: number[];
-  selectedRecordId?: number;
+  totalPages: number;
+  totalRecords: number;
 }
 
 interface NpcSystemsActionsContextState {
-  setRecordsList: React.Dispatch<React.SetStateAction<NpcSystemRecord[]>>;
-  onPageChange: (newPage: number) => void;
-  onChangePageView: (view: PageViewType) => void;
   fetchNpcSystems: (params?: NpcSystemQueryParams) => Promise<void>;
   addNpcSystem: (
     npcSystemData: Omit<
@@ -85,16 +82,21 @@ interface NpcSystemsActionsContextState {
     status: string
   ) => Promise<NpcSystemRecord | null>;
   handleReload: () => void;
+
+  onDeleteConfirmDialog: (id: number) => void;
+  onChangePageView: (view: PageViewType) => void;
+  onPageChange: (newPage: number) => void;
+
+  setAddOrEdit: React.Dispatch<React.SetStateAction<AddOrEdit>>;
+  setCheckedRecords: React.Dispatch<React.SetStateAction<number[]>>;
+  setConfirmDialog: React.Dispatch<React.SetStateAction<ConfirmDialogState>>;
   setNotify: React.Dispatch<React.SetStateAction<NotifyState>>;
+  setRecordsList: React.Dispatch<React.SetStateAction<NpcSystemRecord[]>>;
+  setSelectedRecord: React.Dispatch<React.SetStateAction<NpcSystemRecord>>;
+  setSelectedRecordId: React.Dispatch<React.SetStateAction<number>>;
   setShowAddEdit: React.Dispatch<React.SetStateAction<boolean>>;
   setShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
   setShowView: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedRecord: React.Dispatch<React.SetStateAction<NpcSystemRecord>>;
-  setAddOrEdit: React.Dispatch<React.SetStateAction<AddOrEdit>>;
-  setConfirmDialog: React.Dispatch<React.SetStateAction<ConfirmDialogState>>;
-  setCheckedRecords: React.Dispatch<React.SetStateAction<number[]>>;
-  setSelectedRecordId: React.Dispatch<React.SetStateAction<number>>;
-  onDeleteConfirmDialog: (id: number) => void;
 }
 //#endregion
 
@@ -416,47 +418,49 @@ export const NpcSystemsContextProvider: React.FC<
   return (
     <NpcSystemsContext.Provider
       value={{
+        addOrEdit,
         allParamsRaw,
-        recordsList,
-        totalRecords,
-        totalPages,
-        loading,
+        confirmDialog,
+        checkedRecords,
         error,
+        loading,
+        itemOverrides,
+        notify,
         page,
         pageView,
-        notify,
+        recordsList,
+        selectedRecord,
+        selectedRecordId,
         showAddEdit,
         showDetail,
         showView,
-        selectedRecord,
-        addOrEdit,
-        itemOverrides,
-        confirmDialog,
-        checkedRecords,
-        selectedRecordId,
+        totalPages,
+        totalRecords,
       }}
     >
       <NpcSystemsActionsContext.Provider
         value={{
-          setRecordsList,
-          onPageChange,
-          onChangePageView,
           fetchNpcSystems,
           addNpcSystem,
-          updateNpcSystem,
           deleteNpcSystem,
           patchNpcSystemStatus,
+          updateNpcSystem,
           handleReload,
+
+          onChangePageView,
+          onDeleteConfirmDialog,
+          onPageChange,
+
+          setAddOrEdit,
+          setCheckedRecords,
+          setConfirmDialog,
           setNotify,
+          setRecordsList,
+          setSelectedRecord,
+          setSelectedRecordId,
           setShowAddEdit,
           setShowDetail,
           setShowView,
-          setSelectedRecord,
-          setAddOrEdit,
-          setConfirmDialog,
-          setCheckedRecords,
-          setSelectedRecordId,
-          onDeleteConfirmDialog,
         }}
       >
         {children}
