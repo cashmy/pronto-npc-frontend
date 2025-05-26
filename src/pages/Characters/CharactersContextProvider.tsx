@@ -31,12 +31,24 @@ import { NotifyState } from "../../components/BaseComponents/Notification/Notifi
 //#region //* Type Declarations
 type AddOrEdit = "Add" | "Edit";
 
+type CharactersItemOverrides = {
+  overrideAdd?: boolean;
+  overrideCopy?: boolean;
+  overrideEdit?: boolean;
+  overrideDelete?: boolean;
+  overrideDetail?: boolean;
+  overrideSchedule?: boolean;
+  overrideStatusChange?: boolean;
+  overrideView?: boolean;
+};
+
 interface CharacterContextState {
   addOrEdit: AddOrEdit;
   allParamsRaw: string | null;
   checkedRecords?: number[];
   confirmDialog: ConfirmDialogState;
   error: string | null;
+  itemOverrides?: CharactersItemOverrides;
   loading: boolean;
   notify: NotifyState;
   page: number;
@@ -160,6 +172,17 @@ const CharacterProvider: React.FC<CharacterProviderProps> = ({ children }) => {
       "Are you sure you want to delete this Characeter(s) and the associated data?",
     onConfirm: () => {},
   });
+
+  const itemOverrides: CharactersItemOverrides = {
+    overrideAdd: false, // Allow Add
+    overrideCopy: true, // Allow Copy
+    overrideEdit: false, // Allow Edit
+    overrideDelete: false, // Allow Delete
+    overrideDetail: true, // Works with
+    overrideSchedule: true, // Show Calendar
+    overrideStatusChange: true, // Show Status Change
+    overrideView: false, // Display record
+  };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -379,6 +402,7 @@ const CharacterProvider: React.FC<CharacterProviderProps> = ({ children }) => {
         checkedRecords,
         confirmDialog,
         error,
+        itemOverrides,
         loading,
         notify,
         page,

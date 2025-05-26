@@ -19,6 +19,7 @@ export interface CharacterRecord {
   character_sub_group: string;
   ai_integration_exists: boolean;
   bulk_generated: boolean;
+  owner: number | null; // Assuming owner is a number or null
 }
 
 export const characterRecord: CharacterRecord = {
@@ -41,4 +42,5 @@ export const characterRecord: CharacterRecord = {
   character_sub_group: "",
   ai_integration_exists: false,
   bulk_generated: false,
+  owner: null, // Default value for owner
 };

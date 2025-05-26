@@ -2,7 +2,7 @@ import React from "react";
 import AppGridContainer from "../../components/AppGridContainer";
 import AppContainer from "../../components/AppContainer/index";
 import { Box, Grid, Toolbar } from "@mui/material";
-// import CharactersViewController from "./CharactersViews/CharactersViewController";
+import CharactersViewController from "./CharacterViews/CharactersViewController";
 import CharactersContextProvider from "./CharactersContextProvider";
 import { useLayoutState } from "../../context";
 import {
@@ -41,8 +41,7 @@ const CharactersControllerPage: React.FC = () => {
         <AppGridContainer>
           <Grid size={{ xs: 12 }} sx={{ paddingTop: "5px !important" }}>
             <AppContainer title="Work with Characters" fullView>
-              {/* <CharactersViewController /> */}
-              Character views controller goes here
+              <CharactersViewController />
             </AppContainer>
           </Grid>
         </AppGridContainer>
