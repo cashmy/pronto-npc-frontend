@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 //#region //* Imports
 // * Mui
 import { Box, Paper, Typography } from "@mui/material";
@@ -24,6 +23,7 @@ const CharactersTableViewController: React.FC<
   CharactersTableViewControllerProps
 > = ({ checkedRecords, pageView, handleAddRecordOpen }) => {
   const { recordsList, loading } = useCharacterContext();
+  const defaultColor = "#3f51b5"; // Default color if not provided
 
   // console.log("Page View", pageView);
   // console.log("Checked Records", checkedRecords);
@@ -39,10 +39,16 @@ const CharactersTableViewController: React.FC<
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
-              ml: 5,
+              ml: 1,
+              mr: 1,
+              pt: 1,
+              pb: 1,
+              backgroundColor: defaultColor,
+              borderRadius: 3,
+              color: "white",
             }}
           >
-            <Typography variant="body2" sx={{ ml: 6 }}>
+            <Typography variant="body2" sx={{ ml: 10 }}>
               Image
             </Typography>
             <Typography variant="body2" sx={{ ml: 2, width: 150 }}>
@@ -60,14 +66,23 @@ const CharactersTableViewController: React.FC<
             <Typography variant="body2" sx={{ ml: 4, width: 100 }}>
               Race
             </Typography>
-            <Typography variant="body2" sx={{ ml: 4, width: 100 }}>
+            <Typography variant="body2" sx={{ ml: 4, width: 75 }}>
               Occupation
             </Typography>
-            <Typography variant="body2" sx={{ ml: 4, width: 100 }}>
+            <Typography variant="body2" sx={{ ml: 4, width: 75 }}>
               Class
             </Typography>
             <Typography variant="body2" sx={{ ml: 4, width: 125 }}>
               Current Location
+            </Typography>
+            <Typography variant="body2" sx={{ ml: 4, width: 100 }}>
+              Group
+            </Typography>
+            <Typography variant="body2" sx={{ ml: 4, width: 100 }}>
+              Sub Group
+            </Typography>
+            <Typography variant="body2" sx={{ ml: 4, width: 100 }}>
+              System
             </Typography>
           </Box>
           <Paper sx={{}}>

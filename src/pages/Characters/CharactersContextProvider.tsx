@@ -213,8 +213,8 @@ const CharacterProvider: React.FC<CharacterProviderProps> = ({ children }) => {
 
         // const { data, total, page: responsePage, totalPages } = response.data;
         setRecordsList(recordsFromApi);
-        // setTotalRecords(total);
-        // setPage(responsePage);
+        setTotalRecords(recordsFromApi.length);
+        // setPage(1);
         // setTotalPages(totalPages);
       } catch (error: any) {
         console.error("Error fetching characters:", error);
@@ -253,7 +253,7 @@ const CharacterProvider: React.FC<CharacterProviderProps> = ({ children }) => {
       message: "Data reload requested...",
       type: "info",
     });
-    // fetchNpcSystems(); // Use context action to refetch
+    fetchCharacters();
   };
 
   const onPageChange = (newPage: number) => {

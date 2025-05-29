@@ -1,8 +1,17 @@
 // #region // * Imports
 import React from "react";
 import clsx from "clsx";
-import { alpha, Box, Checkbox, ListItem } from "@mui/material";
+import {
+  alpha,
+  Box,
+  Chip,
+  Checkbox,
+  ListItem,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { styled } from "@mui/system";
+import DoNotTouchIcon from "@mui/icons-material/DoNotTouch";
 // * Local Components
 import AppItemMenu from "../../../components/AppItemMenu/AppItemMenu";
 import { Fonts } from "../../../constants/AppEnums";
@@ -64,7 +73,7 @@ const CharactersTableListItem: React.FC<CharactersTableListItemProps> = ({
   item,
 }) => {
   const { itemOverrides, checkedRecords } = useCharacterContext();
-
+  const defaultNpcSystemColor = "#3f51b5"; // Default color if not provided
   const {
     setShowDetail,
     setShowAddEdit,
@@ -121,15 +130,19 @@ const CharactersTableListItem: React.FC<CharactersTableListItemProps> = ({
       >
         {/* // & Check Box */}
         <span onClick={(event) => event.stopPropagation()}>
-          <Checkbox
-            sx={{
-              color: (theme) => theme.palette.text.disabled,
-            }}
-            checked={(checkedRecords ?? []).includes(item.id)}
-            // onChange={(event) => onChangeCheckedRecords(event, item.id)}
-            color="primary"
-            disabled={!item.owner}
-          />
+          {item.owner ? (
+            <Checkbox
+              sx={{
+                color: (theme) => theme.palette.text.disabled,
+              }}
+              checked={(checkedRecords ?? []).includes(item.id)}
+              // onChange={(event) => onChangeCheckedRecords(event, item.id)}
+              color="primary"
+              disabled={!item.owner}
+            />
+          ) : (
+            <DoNotTouchIcon sx={{ mr: 1.5, ml: 1, color: "grey" }} />
+          )}
         </span>
 
         {/* // & Active Icon Toggle */}
@@ -172,7 +185,21 @@ const CharactersTableListItem: React.FC<CharactersTableListItemProps> = ({
             whiteSpace: "nowrap",
           }}
         >
-          {item.first_name} {item.last_name}{" "}
+          <Tooltip
+            title={`${item.description ? item.description : "Nondescript"} `}
+            placement="top"
+            arrow
+          >
+            <Typography>
+              {item.first_name}{" "}
+              {item.alias && (
+                <span style={{ fontStyle: "italic", color: "#888" }}>
+                  ({item.alias}){" "}
+                </span>
+              )}
+              {item.last_name}
+            </Typography>
+          </Tooltip>
         </Box>
         {/* //& Age */}
         <Box
@@ -242,7 +269,7 @@ const CharactersTableListItem: React.FC<CharactersTableListItemProps> = ({
           component="span"
           sx={{
             mr: 4,
-            maxWidth: "100px",
+            maxWidth: "75px",
             fontWeight: Fonts.MEDIUM,
             flex: 1,
             overflow: "hidden",
@@ -250,7 +277,7 @@ const CharactersTableListItem: React.FC<CharactersTableListItemProps> = ({
             whiteSpace: "nowrap",
           }}
         >
-          {item.profession}
+          {item.profession ? item.profession : "None"}
         </Box>
 
         {/* //& Rpg Class */}
@@ -258,7 +285,7 @@ const CharactersTableListItem: React.FC<CharactersTableListItemProps> = ({
           component="span"
           sx={{
             mr: 4,
-            maxWidth: "100px",
+            maxWidth: "75px",
             fontWeight: Fonts.MEDIUM,
             flex: 1,
             overflow: "hidden",
@@ -266,8 +293,9 @@ const CharactersTableListItem: React.FC<CharactersTableListItemProps> = ({
             whiteSpace: "nowrap",
           }}
         >
-          {item.rpg_class}
+          {item.rpg_class ? item.rpg_class : "None"}
         </Box>
+
         {/* //& Location */}
         <Box
           component="span"
@@ -284,6 +312,56 @@ const CharactersTableListItem: React.FC<CharactersTableListItemProps> = ({
           {item.current_location}
         </Box>
 
+        {/* //& Group */}
+        <Box
+          component="span"
+          sx={{
+            mr: 4,
+            maxWidth: "100px",
+            fontWeight: Fonts.MEDIUM,
+            flex: 1,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {item.character_group_display_name}
+        </Box>
+        {/* //& Sub Group */}
+        <Box
+          component="span"
+          sx={{
+            mr: 4,
+            maxWidth: "100px",
+            fontWeight: Fonts.MEDIUM,
+            flex: 1,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {item.character_sub_group_display_name}
+        </Box>
+
+        {/* //& Npc System Color Chip */}
+        <Box
+          component="span"
+          sx={{
+            flex: 1,
+            overflow: "hidden",
+          }}
+        >
+          <Chip
+            sx={{
+              mt: 1,
+              minWidth: 125,
+              backgroundColor: `${
+                item.npc_system_color || defaultNpcSystemColor
+              }`,
+            }}
+            label={item.npc_system_name}
+          />
+        </Box>
         {/* //& App Icons Menu */}
         <Box
           component="span"
