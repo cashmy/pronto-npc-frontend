@@ -15,6 +15,15 @@ export interface ImageRecord {
   owner: string;
 }
 
+export interface PatchImageRecord {
+  id: number;
+  file_name: string;
+  alt_text: string;
+  file_size: number;
+  mime_type: string;
+  image_type: ImageType;
+}
+
 // Defined the Genre type
 export interface ImageSelectRecord {
   id: string | number; // A unique identifier for the image record

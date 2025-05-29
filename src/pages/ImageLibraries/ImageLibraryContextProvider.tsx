@@ -19,7 +19,7 @@ import createImageService, {
   ImageResponse,
   ImageQueryParams,
 } from "../../services/images.service";
-import { ImageRecord } from "../../dataModels/images";
+import { ImageRecord, PatchImageRecord } from "../../dataModels/images";
 import { ImageType } from "./imageTypes";
 
 import { NotifyState } from "../../components/BaseComponents/Notification/Notification";
@@ -41,11 +41,12 @@ interface ImagesContextState {
 }
 
 interface ImagesActionsContextState {
-  addImage: (
-    imageData: Omit<ImageRecord, "id" | "created_at" | "updated_at">
-  ) => Promise<ImageRecord | null>;
+  addImage: (formData: FormData) => Promise<ImageRecord | null>;
+  // addImage: (
+  //   imageData: Omit<ImageRecord, "id" | "created_at" | "updated_at">
+  // ) => Promise<ImageRecord | null>;
   deleteImage: (id: number) => Promise<boolean>;
-  updateImage: (imageData: ImageRecord) => Promise<ImageRecord | null>;
+  patchImage: (imageData: PatchImageRecord) => Promise<PatchImageRecord | null>;
   fetchImages: (queryParams?: ImageQueryParams) => Promise<void>;
   handleReload: () => void;
   setNotify: React.Dispatch<React.SetStateAction<NotifyState>>;
@@ -209,14 +210,14 @@ export const ImagesContextProvider: React.FC<ImagesContextProviderProps> = ({
   };
 
   const addImage = async (
-    imageData: Omit<ImageRecord, "id" | "created_at" | "updated_at">
+    // imageData: Omit<ImageRecord, "id" | "created_at" | "updated_at">
+    formData: FormData
   ): Promise<ImageRecord | null> => {
     setLoading(true);
     setError(null);
     try {
-      // npcSystemService.addRecord returns AxiosResponse<NpcSystemRecord>
       const response: AxiosResponse<ImageRecord> = await imageService.addRecord(
-        imageData
+        formData
       );
       fetchImages();
       return response.data; // Return the NpcSystemRecord from response.data
@@ -233,21 +234,23 @@ export const ImagesContextProvider: React.FC<ImagesContextProviderProps> = ({
     }
   };
 
-  const updateImage = async (
-    imageData: ImageRecord
-  ): Promise<ImageRecord | null> => {
+  const patchImage = async (
+    imageData: PatchImageRecord
+  ): Promise<PatchImageRecord | null> => {
     console.log("Update Image Library:", imageData);
     setLoading(true);
     setError(null);
     try {
       // npcSystemService.updateRecord returns Promise<NpcSystemRecord> directly
-      const updatedRecord: ImageRecord = await imageService.updateRecord(
+      const patchedRecord: PatchImageRecord = await imageService.patchRecord(
         imageData
       );
       setRecordsList((prev) =>
-        prev.map((rec) => (rec.id === updatedRecord.id ? updatedRecord : rec))
+        prev.map((rec) =>
+          rec.id === patchedRecord.id ? { ...rec, ...patchedRecord } : rec
+        )
       );
-      return updatedRecord;
+      return patchedRecord;
     } catch (err: any) {
       console.error("Failed to update Image Library:", err);
       const errorMessage =
@@ -349,7 +352,7 @@ export const ImagesContextProvider: React.FC<ImagesContextProviderProps> = ({
         value={{
           addImage,
           deleteImage,
-          updateImage,
+          patchImage,
           fetchImages,
 
           handleReload,

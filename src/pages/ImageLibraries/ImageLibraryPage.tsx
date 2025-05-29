@@ -56,7 +56,7 @@ import { ImageType, imageTypeDescriptions } from "./imageTypes";
 import NoImage from "../../assets/images/no_image.png";
 
 // * Services
-import { ImageRecord } from "../../dataModels/images";
+import { ImageRecord, PatchImageRecord } from "../../dataModels/images";
 import {
   useImagesContext,
   useImagesActionsContext,
@@ -72,7 +72,8 @@ type ImageLibraryPageProps = {
 const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
   // #region // * State Variables
   const { recordsList, showView } = useImagesContext();
-  const { setShowView } = useImagesActionsContext();
+  const { addImage, setShowView, patchImage, deleteImage } =
+    useImagesActionsContext();
   const [images, setImages] = useState<any[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   // const [imageTypeState, setImageTypeState] = useState<ImageType>(imageType);
@@ -86,6 +87,7 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
   const loading = false;
   // const recordsList = React.useMemo(() => [] as ImageRecord[], []);
 
+  const useCurrUser = Boolean(true); // This should be set based on your application logic
   const open = Boolean(anchorEl);
   const [data, setData] = useState<any[]>([]);
   const [notify, setNotify] = useState<NotifyState>({
@@ -94,11 +96,13 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
     type: "info",
   });
   const [confirmDialog, setConfirmDialog] = useState<{
+    id: string | number | null;
     isOpen: boolean;
     title: string;
     subTitle: string;
     onConfirm?: () => void;
   }>({
+    id: null,
     isOpen: false,
     title: "",
     subTitle: "",
@@ -115,32 +119,41 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
   // #endregion
 
   // #region //* Event Handlers
-
   const handleImageAddAll = (
     imageList: UploadingImageListType,
     onImageRemoveAll: () => void
   ) => {
     imageList.forEach((image: UploadingImageType) => {
       const formData = new FormData();
-      console.log("ImageLibraryPage: image", image.file);
+
+      // Convert the image to FormData
       if (image.file) {
-        formData.append("file_name", image.file);
-        formData.append("alt_text", image.file);
+        formData.append("file_name", image.file.name);
+        formData.append("alt_text", image.file.name);
       }
-      // formData.append("user", 2);
-      formData.append("user_id", "1");
+      formData.append("image", image.data_url);
+      formData.append("use_current_user", String(useCurrUser));
       formData.append("file_size", String(image.file?.size || ""));
       formData.append("mime_type", String(image.file?.type || ""));
-
-      alert(`Adding image ${image.file?.name} to database file`);
-      // Todo: Add endpoint to update database
+      formData.append("image_type", imageType);
+      addImage(formData);
     });
     onImageRemoveAll();
   };
-  const addOrEdit = (record: ImageRecord | null, resetForm: () => void) => {
+  const convertFormToData = (item: PatchImageRecord) => {
+    // removes potential image data from the record
+    return {
+      id: item.id,
+      file_name: item.file_name,
+      file_size: item.file_size,
+      mime_type: item.mime_type,
+      alt_text: item.alt_text,
+      image_type: item.image_type,
+    };
+  };
+  const addOrEdit = (record: PatchImageRecord, resetForm: () => void) => {
     let close = false;
-    // TODO: Add endpoint to update database
-    // updateImage(convertToFormData(record, "edit"));
+    patchImage(convertFormToData(record as PatchImageRecord));
     console.log("Image record updated in database", record);
     close = true;
 
@@ -161,7 +174,9 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
     setImages(imageList);
   };
   const handleDelete = (id: ImageRecord["id"]) => {
+    console.log("ImageLibraryPage: handleDelete", id);
     setConfirmDialog({
+      id: id,
       isOpen: true,
       title: "Are you sure you want to delete this Image?",
       subTitle: "You can't undo this action.",
@@ -172,12 +187,13 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
     handleMenuClose();
   };
   const onDelete = (id: ImageRecord["id"]) => {
+    console.log("ImageLibraryPage: onDelete", id);
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false,
     });
     // TODO: Add endpoint to delete record & image from database
-    // deleteImage(id);
+    deleteImage(id);
     setNotify({
       isOpen: true,
       message: `Record ${id} deleted successfully`,
@@ -331,12 +347,16 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
           sx={{
             width: "calc(100vw - 375px)",
             height: "calc(100vh - 200px)",
+            display: "flex",
+            flexDirection: "row",
           }}
         >
           <Box
             sx={{
-              display: "grid",
-              gridTemplateColumns: "6fr 3fr",
+              // display: "grid",
+              // gridTemplateColumns: "6fr 3fr",
+              display: "flex",
+              flexDirection: "row",
             }}
           >
             {/* //* Display Pane of existing Images */}
@@ -356,91 +376,89 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
                   borderRadius: "10px",
                 }}
               >
-                <AppScrollbar>
-                  <Box sx={{ m: 3 }} display="flex">
-                    {loading ? (
-                      <Typography>Loading...</Typography>
-                    ) : (
-                      data.map((item, index) => (
-                        <Card
-                          key={index}
-                          sx={{
-                            m: 2,
-                            p: 1,
-                            width: "150px",
-                            height: "175px",
-                            borderRadius: "10px",
-                            boxShadow: "3px 3px 3px 3px rgba(0,0,0,0.2)",
-                            display: selectImageStyle(item.imageType),
-                          }}
-                        >
-                          <CardMedia
-                            component="img"
-                            sx={selectImageSize(item.imageType)}
-                            src={
-                              item.image_url != "" ? item.image_url : NoImage
-                            }
-                            alt={
-                              item.altText != "" && item.altText != null
-                                ? item.alt_text
-                                : item.file_name
-                            }
-                            onClick={() => handleSelection(item)}
-                          />
-                          <CardContent sx={{ mt: "auto" }}>
-                            <Box
-                              sx={{
-                                pt: 2,
-                                display: "flex",
-                                flex: "flex-row",
-                                alignItems: "center",
-                              }}
-                            >
-                              <Grid size={{ xs: 10 }}>
-                                <Typography variant="body2" sx={{}}>
-                                  {item.alt_text.length > 15
-                                    ? item.alt_text.substring(0, 14) + "..."
-                                    : item.alt_text}
-                                </Typography>
-                              </Grid>
-                              <Grid size={{ xs: 2 }}>
-                                {item.owner !== null && (
-                                  <BaseComponents.ActionButton
-                                    size="small"
-                                    tooltipText="More options"
-                                    aria-controls={
-                                      open ? "basic-menu" : undefined
-                                    }
-                                    aria-haspopup="true"
-                                    aria-expanded={open ? "true" : undefined}
-                                    aria-label={`more options for ${item.name}`}
-                                    onClick={(e) => {
-                                      handleMenuClick(e, item);
-                                    }}
-                                  >
-                                    <MoreVertIcon
-                                      sx={{ color: "grey", fontSize: 20 }}
-                                    />
-                                  </BaseComponents.ActionButton>
-                                )}
-                                {item.owner === null && (
-                                  <DoNotDisturbAltIcon
-                                    sx={{ color: "red", fontSize: 20 }}
+                {/* <AppScrollbar> */}
+                <Box sx={{ m: 3, display: "flex", flexDirection: "row" }}>
+                  {loading ? (
+                    <Typography>Loading...</Typography>
+                  ) : (
+                    data.map((item, index) => (
+                      <Card
+                        key={index}
+                        sx={{
+                          m: 2,
+                          p: 1,
+                          width: "150px",
+                          height: "200px",
+                          borderRadius: "10px",
+                          boxShadow: "3px 3px 3px 3px rgba(0,0,0,0.2)",
+                          display: selectImageStyle(item.imageType),
+                        }}
+                      >
+                        <CardMedia
+                          component="img"
+                          sx={selectImageSize(item.imageType)}
+                          src={item.image_url != "" ? item.image_url : NoImage}
+                          alt={
+                            item.altText != "" && item.altText != null
+                              ? item.alt_text
+                              : item.file_name
+                          }
+                          onClick={() => handleSelection(item)}
+                        />
+                        <CardContent sx={{ mt: "auto" }}>
+                          <Box
+                            sx={{
+                              pt: 2,
+                              display: "flex",
+                              flex: "flex-row",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Grid size={{ xs: 11 }}>
+                              <Typography variant="body2" sx={{}}>
+                                {item.alt_text.length > 12
+                                  ? item.alt_text.substring(0, 11) + "..."
+                                  : item.alt_text}
+                              </Typography>
+                            </Grid>
+                            <Grid size={{ xs: 1 }}>
+                              {item.owner !== null && (
+                                <BaseComponents.ActionButton
+                                  size="small"
+                                  tooltipText="More options"
+                                  aria-controls={
+                                    open ? "basic-menu" : undefined
+                                  }
+                                  aria-haspopup="true"
+                                  aria-expanded={open ? "true" : undefined}
+                                  aria-label={`more options for ${item.name}`}
+                                  onClick={(e) => {
+                                    handleMenuClick(e, item);
+                                  }}
+                                >
+                                  <MoreVertIcon
+                                    sx={{ color: "grey", fontSize: 20 }}
                                   />
-                                )}
-                                {/* {
+                                </BaseComponents.ActionButton>
+                              )}
+                              {item.owner === null && (
+                                <DoNotDisturbAltIcon
+                                  sx={{ color: "red", fontSize: 20 }}
+                                />
+                              )}
+                              {/* {
                                   <MoreVertIcon
                                     sx={{ color: "grey", fontSize: 20 }}
                                   />
                                 } */}
-                              </Grid>
-                            </Box>
-                          </CardContent>
-                        </Card>
-                      ))
-                    )}
-                  </Box>
-                </AppScrollbar>
+                            </Grid>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    ))
+                  )}
+                </Box>
+                {/* </AppScrollbar> */}
               </Paper>
             </Box>
 
@@ -634,17 +652,26 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
       >
         <ImageLibraryDspDialog imageRecord={recordForEdit as ImageRecord} />
       </PageDialog>
+      {/* //& Delete Image */}
       <AppConfirmDialog
         open={confirmDialog.isOpen}
-        title="Are you sure you want to delete this Image?"
-        dialogTitle="Image Delete Confirmation"
+        // title="Are you sure you want to delete this Image?"
+        title={confirmDialog.subTitle}
+        dialogTitle={confirmDialog.title}
+        // dialogTitle="Image Delete Confirmation"
         onDeny={() => {
           setConfirmDialog({ ...confirmDialog, isOpen: false });
         }}
         onConfirm={() => {
-          if (currentItem) onDelete(currentItem.id);
+          console.log("ImageLibraryPage: onConfirm delete: ", currentItem);
+          if (currentItem) {
+            onDelete(currentItem.id);
+          } else {
+            onDelete(confirmDialog.id as number);
+          }
         }}
       />
+      {/* //& More Options Menu */}
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}

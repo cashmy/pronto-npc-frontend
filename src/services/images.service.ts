@@ -2,7 +2,11 @@
 // * src/services/images.service.ts
 import { type AxiosInstance, type AxiosResponse } from "axios";
 import { API_URL_BASE as BASE_URL } from "../api/axios";
-import { ImageRecord, ImageSelectRecord } from "../dataModels/images"; // Adjusted path
+import {
+  ImageRecord,
+  PatchImageRecord,
+  ImageSelectRecord,
+} from "../dataModels/images"; // Adjusted path
 
 const API_URL_BASE = BASE_URL + "api/images/"; // API endpoint base
 
@@ -32,15 +36,21 @@ const createImageService = (axiosInstance: AxiosInstance) => {
       return axiosInstance.get<ImageRecord>(`${API_URL_BASE}${id}/`, {});
     },
 
-    addRecord(
-      data: Omit<ImageRecord, "id" | "created_at" | "updated_at">
-    ): Promise<AxiosResponse<ImageRecord>> {
-      return axiosInstance.post<ImageRecord>(API_URL_BASE, data);
+    addRecord(formData: FormData): Promise<AxiosResponse<ImageRecord>> {
+      // Axios automatically sets the 'Content-Type' to 'multipart/form-data'
+      // when the data is an instance of FormData.
+      return axiosInstance.post<ImageRecord>(API_URL_BASE, formData);
     },
 
     updateRecord(data: ImageRecord): Promise<ImageRecord> {
       return axiosInstance
         .put<ImageRecord>(`${API_URL_BASE}${data.id}/`, data)
+        .then((response) => response.data);
+    },
+
+    patchRecord(data: PatchImageRecord): Promise<PatchImageRecord> {
+      return axiosInstance
+        .patch<PatchImageRecord>(`${API_URL_BASE}${data.id}/`, data)
         .then((response) => response.data);
     },
 
