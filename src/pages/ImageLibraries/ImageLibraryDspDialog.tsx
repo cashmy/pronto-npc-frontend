@@ -6,10 +6,11 @@
  */
 
 import { useState } from "react";
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import Image from "mui-image";
 import { Form } from "../../hooks/useForm";
 import { ImageRecord } from "../../dataModels/images";
+import { ImageType, imageTypeDescriptions } from "./imageTypes"; // Adjust the import path as necessary
 
 interface ImageLibraryDspDialogProps {
   imageRecord: ImageRecord;
@@ -23,27 +24,27 @@ const ImageLibraryDspDialog: React.FC<ImageLibraryDspDialogProps> = ({
   //#region // * Styles
   const selectImageSize = (imageType: string) => {
     switch (imageType) {
-      case "i":
+      case ImageType.Image:
         return {
           // aspectRatio: "1/1",
           width: "100%",
           maxHeight: "75vh",
           borderRadius: "10px",
         };
-      case "a":
+      case ImageType.Avatar:
         return {
           aspectRatio: "1/1",
           maxWidth: "50vh",
           borderRadius: "50px",
         };
-      case "t":
+      case ImageType.Token:
         return {
           aspectRatio: "1/1",
           width: "100%",
           maxHeight: "75vh",
           borderRadius: "10px",
         };
-      case "s":
+      case ImageType.Sidebar:
         return {
           aspectRatio: "1/2",
           mt: 1,
@@ -62,8 +63,15 @@ const ImageLibraryDspDialog: React.FC<ImageLibraryDspDialogProps> = ({
   return (
     <>
       <Form>
-        <Grid container>
-          <Grid size={{ xs: 6, md: 6 }}>
+        <Grid
+          container
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <Grid size={{ xs: 12 }}>
             <Image
               src={imageRecord.image_url || fileObject}
               alt={imageRecord.alt_text}
@@ -77,19 +85,14 @@ const ImageLibraryDspDialog: React.FC<ImageLibraryDspDialogProps> = ({
               bgColor="inherit"
             />
           </Grid>
-          <Grid size={{ xs: 6, md: 6 }}>
-            <Image
-              src={imageRecord.image_url || fileObject}
-              alt={imageRecord.alt_text}
-              style={selectImageSize(imageRecord.image_type)}
-              fit="contain"
-              duration={3000}
-              easing="cubic-bezier(0.7, 0, 0.6, 1)"
-              shift="bottom"
-              distance="100px"
-              shiftDuration={1000}
-              bgColor="inherit"
-            />
+          <Grid size={{ xs: 12 }}>
+            <Typography variant="h6" sx={{ textAlign: "center", mt: 2, mb: 1 }}>
+              Class:{" "}
+              {imageTypeDescriptions[imageRecord.image_type] || "Unknown Type"}
+            </Typography>
+            <Typography variant="h6" sx={{ textAlign: "center", mt: 2, mb: 1 }}>
+              Type: {imageRecord.mime_type || "Unknown Type"}
+            </Typography>
           </Grid>
         </Grid>
       </Form>
