@@ -52,7 +52,7 @@ import Notification, {
 } from "../../components/BaseComponents/Notification/Notification";
 import PageDialog from "../../components/BaseComponents/PageDialog";
 import TitleBar from "../../components/TitleBar";
-import { ImageType, imageTypeDescriptions } from "./imageTypes";
+import { ImageType } from "./imageTypes";
 import NoImage from "../../assets/images/no_image.png";
 
 // * Services
@@ -259,8 +259,8 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
         return "All Images";
     }
   };
-  const selectDialogTitle = (imageType: ImageType) => {
-    return imageTypeDescriptions[imageType] || "All Images";
+  const selectDialogTitle = (text: string) => {
+    return text || "All Images";
   };
   const selectImageSize = (imageType: ImageType) => {
     switch (imageType) {
@@ -642,11 +642,7 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
       <PageDialog
         openPopup={showView}
         setOpenPopup={setShowView}
-        title={
-          selectDialogTitle(
-            (recordForEdit?.image_type as ImageType) || "default"
-          ) + " Details"
-        }
+        title={selectDialogTitle(recordForEdit?.alt_text || "Image Details")}
         titleColor="#393bee"
         size={"sm"}
       >
