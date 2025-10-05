@@ -6,6 +6,7 @@ import { Box, Checkbox, Chip, ListItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { alpha } from "@mui/material";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import DoNotTouchIcon from "@mui/icons-material/DoNotTouch";
 // * Local Components
 import AppItemMenu from "../../../components/AppItemMenu/AppItemMenu";
 import { Fonts } from "../../../constants/AppEnums";
@@ -136,15 +137,19 @@ const NpcSystemTableListItem: React.FC<NpcSystemTableListItemProps> = ({
       >
         {/* // & Check Box */}
         <span onClick={(event) => event.stopPropagation()}>
-          <Checkbox
-            sx={{
-              color: (theme) => theme.palette.text.disabled,
-            }}
-            checked={(checkedRecords ?? []).includes(item.id)}
-            // onChange={(event) => onChangeCheckedRecords(event, item.id)}
-            color="primary"
-            disabled={item.is_global}
-          />
+          {item.owner ? (
+            <Checkbox
+              sx={{
+                color: (theme) => theme.palette.text.disabled,
+              }}
+              checked={(checkedRecords ?? []).includes(item.id)}
+              // onChange={(event) => onChangeCheckedRecords(event, item.id)}
+              color="primary"
+              disabled={item.is_global}
+            />
+          ) : (
+            <DoNotTouchIcon sx={{ mr: 1.5, ml: 1, color: "grey" }} />
+          )}
         </span>
 
         {/* // & Active Icon Toggle */}

@@ -62,12 +62,13 @@ import {
   useImagesActionsContext,
 } from "./ImageLibraryContextProvider";
 
-// import ?? API connections
 //#endregion
 
+// #region //* Types
 type ImageLibraryPageProps = {
   imageType: ImageType; // Adjust this type based on your actual image type
 };
+// #endregion
 
 const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
   // #region // * State Variables
@@ -342,282 +343,283 @@ const ImageLibraryPage: React.FC<ImageLibraryPageProps> = ({ imageType }) => {
           />
         </Box>
         {/* //* Component Panel */}
-        <Box
+        <Grid
           id="componentPannel"
+          size={{ xs: 10 }}
           sx={{
-            width: "calc(100vw - 375px)",
-            height: "calc(100vh - 200px)",
             display: "flex",
             flexDirection: "row",
+            m: 3,
+            width: "calc(100vw - 350px)",
           }}
         >
-          <Box
+          {/* //* Display Pane of existing Images */}
+          <Grid
+            id="displayPane"
+            size={{ xs: 9 }}
             sx={{
-              // display: "grid",
-              // gridTemplateColumns: "6fr 3fr",
-              display: "flex",
-              flexDirection: "row",
+              height: "calc(100vh - 275px)",
+              borderRadius: "10px",
             }}
           >
-            {/* //* Display Pane of existing Images */}
-            <Box
+            <Paper
+              elevation={10}
               sx={{
-                height: "calc(100vh - 220px)",
-                m: 3,
+                width: "100%",
+                height: "100%",
                 borderRadius: "10px",
               }}
             >
-              <Paper
-                elevation={10}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  // overflowY: "auto",
-                  borderRadius: "10px",
-                }}
-              >
-                {/* <AppScrollbar> */}
-                <Box sx={{ m: 3, display: "flex", flexDirection: "row" }}>
-                  {loading ? (
-                    <Typography>Loading...</Typography>
-                  ) : (
-                    data.map((item, index) => (
-                      <Card
-                        key={index}
-                        sx={{
-                          m: 2,
-                          p: 1,
-                          width: "150px",
-                          height: "200px",
-                          borderRadius: "10px",
-                          boxShadow: "3px 3px 3px 3px rgba(0,0,0,0.2)",
-                          display: selectImageStyle(item.imageType),
-                        }}
-                      >
-                        <CardMedia
-                          component="img"
-                          sx={selectImageSize(item.imageType)}
-                          src={item.image_url != "" ? item.image_url : NoImage}
-                          alt={
-                            item.altText != "" && item.altText != null
-                              ? item.alt_text
-                              : item.file_name
-                          }
-                          onClick={() => handleSelection(item)}
-                        />
-                        <CardContent sx={{ mt: "auto" }}>
-                          <Box
-                            sx={{
-                              pt: 2,
-                              display: "flex",
-                              flex: "flex-row",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Grid size={{ xs: 11 }}>
-                              <Typography variant="body2" sx={{}}>
-                                {item.alt_text.length > 12
-                                  ? item.alt_text.substring(0, 11) + "..."
-                                  : item.alt_text}
-                              </Typography>
-                            </Grid>
-                            <Grid size={{ xs: 1 }}>
-                              {item.owner !== null && (
-                                <BaseComponents.ActionButton
-                                  size="small"
-                                  tooltipText="More options"
-                                  aria-controls={
-                                    open ? "basic-menu" : undefined
-                                  }
-                                  aria-haspopup="true"
-                                  aria-expanded={open ? "true" : undefined}
-                                  aria-label={`more options for ${item.name}`}
-                                  onClick={(e) => {
-                                    handleMenuClick(e, item);
-                                  }}
-                                >
-                                  <MoreVertIcon
-                                    sx={{ color: "grey", fontSize: 20 }}
-                                  />
-                                </BaseComponents.ActionButton>
-                              )}
-                              {item.owner === null && (
-                                <DoNotDisturbAltIcon
-                                  sx={{ color: "red", fontSize: 20 }}
+              <AppScrollbar>
+                <Grid
+                  id="BoxOfCards"
+                  sx={{
+                    m: 3,
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    height: "100%",
+                    alignContent: "flex-start",
+                  }}
+                >
+                {loading ? (
+                  <Typography>Loading...</Typography>
+                ) : (
+                  data.map((item, index) => (
+                    <Card
+                      key={index}
+                      sx={{
+                        m: 2,
+                        p: 1,
+                        width: "150px",
+                        minWidth: "150px",
+                        height: "200px",
+                        borderRadius: "10px",
+                        boxShadow: "3px 3px 3px 3px rgba(0,0,0,0.2)",
+                        display: selectImageStyle(item.imageType),
+                      }}
+                    >
+                      <CardMedia
+                        component="img"
+                        sx={selectImageSize(item.imageType)}
+                        src={item.image_url != "" ? item.image_url : NoImage}
+                        alt={
+                          item.altText != "" && item.altText != null
+                            ? item.alt_text
+                            : item.file_name
+                        }
+                        onClick={() => handleSelection(item)}
+                      />
+                      <CardContent sx={{ mt: "auto" }}>
+                        <Box
+                          sx={{
+                            pt: 2,
+                            display: "flex",
+                            flex: "flex-row",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Grid size={{ xs: 11 }}>
+                            <Typography variant="body2" sx={{}}>
+                              {item.alt_text.length > 12
+                                ? item.alt_text.substring(0, 11) + "..."
+                                : item.alt_text}
+                            </Typography>
+                          </Grid>
+                          <Grid size={{ xs: 1 }}>
+                            {item.owner !== null && (
+                              <BaseComponents.ActionButton
+                                size="small"
+                                tooltipText="More options"
+                                aria-controls={open ? "basic-menu" : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? "true" : undefined}
+                                aria-label={`more options for ${item.name}`}
+                                onClick={(e) => {
+                                  handleMenuClick(e, item);
+                                }}
+                              >
+                                <MoreVertIcon
+                                  sx={{ color: "grey", fontSize: 20 }}
                                 />
-                              )}
-                              {/* {
+                              </BaseComponents.ActionButton>
+                            )}
+                            {item.owner === null && (
+                              <DoNotDisturbAltIcon
+                                sx={{ color: "red", fontSize: 20 }}
+                              />
+                            )}
+                            {/* {
                                   <MoreVertIcon
                                     sx={{ color: "grey", fontSize: 20 }}
                                   />
                                 } */}
-                            </Grid>
-                          </Box>
-                        </CardContent>
-                      </Card>
-                    ))
-                  )}
-                </Box>
-                {/* </AppScrollbar> */}
-              </Paper>
-            </Box>
+                          </Grid>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </Grid>
+              </AppScrollbar>
+            </Paper>
+          </Grid>
 
-            {/* //* Right Hand Column */}
-            <Box
-              sx={{
-                m: 2,
-                borderRadius: "10px",
-                display: "grid",
-                gridTemplateRows: "2fr 6fr",
-              }}
+          {/* //* Right Hand Column */}
+          <Grid
+            id="rightHandColumn"
+            size={{ xs: 3 }}
+            sx={{
+              ml: 2,
+              borderRadius: "10px",
+            }}
+          >
+            <ImageUploading
+              multiple
+              value={images}
+              onChange={onChange}
+              maxNumber={maxNumber}
+              dataURLKey="data_url"
+              acceptType={["jpg", "png", "jpeg"]}
             >
-              <ImageUploading
-                multiple
-                value={images}
-                onChange={onChange}
-                maxNumber={maxNumber}
-                dataURLKey="data_url"
-                acceptType={["jpg", "png", "jpeg"]}
-              >
-                {({
-                  imageList,
-                  onImageUpload,
-                  onImageRemoveAll,
-                  onImageUpdate,
-                  onImageRemove,
-                  isDragging,
-                  dragProps,
-                }) => (
-                  // write your building UI
-                  <>
-                    {/* //& Click - Drag/Drop Button */}
-                    <Box
+              {({
+                imageList,
+                onImageUpload,
+                onImageRemoveAll,
+                onImageUpdate,
+                onImageRemove,
+                isDragging,
+                dragProps,
+              }) => (
+                <>
+                  {/* //& Click - Drag/Drop Button */}
+                  <Box
+                    sx={{
+                      mb: 2,
+                      borderRadius: "10px",
+                      display: "flex-column",
+                    }}
+                  >
+                    <Button
+                      onClick={onImageUpload}
+                      variant="contained"
+                      size="large"
+                      startIcon={<ImageTwoToneIcon />}
                       sx={{
-                        mb: 2,
-                        borderRadius: "10px",
-                        display: "flex-column",
+                        width: "100%",
+                        height: "100%",
+                        color: "white",
+                        minHeight: "120px",
                       }}
+                      style={
+                        isDragging ? { backgroundColor: "blue" } : undefined
+                      }
+                      {...dragProps}
+                    >
+                      Click or Drag/Drop here
+                    </Button>
+                  </Box>
+                  {/* //& Image List to Add to database */}
+                  <Box
+                    sx={{
+                      borderRadius: "10px",
+                      display: "flex-column",
+                      bgcolor: "background.componentBg",
+                      maxHeight: "calc(100vh - 410px)",
+                      height: "100%",
+                    }}
+                  >
+                    {/* //^ Buttons Box */}
+                    <Box
+                      sx={{ m: 2 }}
+                      display="flex"
+                      flexDirection="row"
+                      justifyContent="space-around"
                     >
                       <Button
-                        onClick={onImageUpload}
                         variant="contained"
-                        size="large"
-                        startIcon={<ImageTwoToneIcon />}
-                        sx={{
-                          mt: 2,
-                          width: "100%",
-                          height: "100%",
-                          color: "white",
-                        }}
-                        style={
-                          isDragging ? { backgroundColor: "blue" } : undefined
+                        startIcon={<KeyboardDoubleArrowLeftIcon />}
+                        onClick={() =>
+                          handleImageAddAll(imageList, onImageRemoveAll)
                         }
-                        {...dragProps}
+                        disabled={imageList.length <= 0}
+                        color="secondary"
                       >
-                        Click or Drag/Drop here
+                        Add All{" "}
+                      </Button>
+                      <Button
+                        variant="contained"
+                        startIcon={<DeleteIcon />}
+                        onClick={onImageRemoveAll}
+                        disabled={imageList.length <= 0}
+                        color="secondary"
+                      >
+                        Remove All{" "}
                       </Button>
                     </Box>
-                    {/* //& Image List to Add to database */}
-                    <Box
+                    <Paper
+                      elevation={10}
                       sx={{
-                        borderRadius: "10px",
-                        display: "flex-column",
+                        width: "100%",
+                        height: "90%",
+                        maxHeight: "100%",
                         bgcolor: "background.componentBg",
-                        maxHeight: "calc(100vh - 410px)",
+                        overflowY: "auto",
+                        borderRadius: "10px",
                       }}
                     >
-                      {/* //^ Buttons Box */}
-                      <Box
-                        sx={{ m: 2 }}
-                        display="flex"
-                        flexDirection="row"
-                        justifyContent="space-around"
-                      >
-                        <Button
-                          variant="contained"
-                          startIcon={<KeyboardDoubleArrowLeftIcon />}
-                          onClick={() =>
-                            handleImageAddAll(imageList, onImageRemoveAll)
-                          }
-                          disabled={imageList.length <= 0}
-                          color="secondary"
+                      {/* //^ Image List */}
+                      <AppScrollbar>
+                        <Box
+                          sx={{ m: 2 }}
+                          display="grid"
+                          gridTemplateColumns="1fr 1fr"
                         >
-                          Add All{" "}
-                        </Button>
-                        <Button
-                          variant="contained"
-                          startIcon={<DeleteIcon />}
-                          onClick={onImageRemoveAll}
-                          disabled={imageList.length <= 0}
-                          color="secondary"
-                        >
-                          Remove All{" "}
-                        </Button>
-                      </Box>
-                      <Paper
-                        elevation={10}
-                        sx={{
-                          width: "100%",
-                          height: "90%",
-                          maxHeight: "100%",
-                          bgcolor: "background.componentBg",
-                          overflowY: "auto",
-                          borderRadius: "10px",
-                        }}
-                      >
-                        {/* //^ Image List */}
-                        <AppScrollbar>
-                          <Box
-                            sx={{ m: 2, ml: 8 }}
-                            display="grid"
-                            gridTemplateColumns="1fr 1fr"
-                          >
-                            {imageList.map((image, index) => (
-                              <Card
-                                key={index}
-                                sx={{
-                                  m: 2,
-                                  flexGrow: 1,
-                                  minWidth: "100px",
-                                  minHeight: "100px",
-                                  maxWidth: "200px",
-                                  maxHeight: "200px",
-                                  backgroundColor: "grey.300",
-                                }}
+                          {imageList.map((image, index) => (
+                            <Card
+                              key={index}
+                              sx={{
+                                m: 2,
+                                flexGrow: 1,
+                                minWidth: "100px",
+                                minHeight: "100px",
+                                maxWidth: "200px",
+                                maxHeight: "200px",
+                                backgroundColor: "grey.300",
+                              }}
+                            >
+                              <CardActionArea
+                                onClick={(e) =>
+                                  handleClickEvent(
+                                    e,
+                                    index,
+                                    onImageUpdate,
+                                    onImageRemove
+                                  )
+                                }
+                                sx={{ cursor: "pointer" }}
                               >
-                                <CardActionArea
-                                  onClick={(e) =>
-                                    handleClickEvent(
-                                      e,
-                                      index,
-                                      onImageUpdate,
-                                      onImageRemove
-                                    )
-                                  }
-                                  sx={{ cursor: "pointer" }}
-                                >
-                                  <CardMedia
-                                    component="img"
-                                    src={image.data_url}
-                                    alt=""
-                                    sx={{
-                                      aspectRatio: "4/3",
-                                      borderRadius: "10px",
-                                    }}
-                                  />
-                                </CardActionArea>
-                              </Card>
-                            ))}
-                          </Box>
-                        </AppScrollbar>
-                      </Paper>
-                    </Box>
-                  </>
-                )}
-              </ImageUploading>
-            </Box>
-          </Box>
-        </Box>
+                                <CardMedia
+                                  component="img"
+                                  src={image.data_url}
+                                  alt=""
+                                  sx={{
+                                    aspectRatio: "4/3",
+                                    borderRadius: "10px",
+                                  }}
+                                />
+                              </CardActionArea>
+                            </Card>
+                          ))}
+                        </Box>
+                      </AppScrollbar>
+                    </Paper>
+                  </Box>
+                </>
+              )}
+            </ImageUploading>
+          </Grid>
+        </Grid>
       </Box>
       {/* //* Dialogs, Modals, Menus & Popups */}
       <Notification notify={notify} setNotify={setNotify} />

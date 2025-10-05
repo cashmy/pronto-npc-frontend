@@ -40,7 +40,19 @@ const NpcSystemPage: React.FC = () => {
       <Toolbar />
       <NpcSystemsContextProvider>
         <AppGridContainer>
-          <Grid size={{ xs: 12 }} sx={{ paddingTop: "5px !important" }}>
+          <Grid
+            className="W-NpcSystemPage"
+            size={{ xs: 12, md: 10, lg: 8, xl: 7 }}
+            sx={{
+              paddingTop: "5px !important",
+              ml: {
+                xs: `${leftOffset - 250}px`,
+                md: `${leftOffset - 150}px`,
+                lg: `${leftOffset}px`,
+                xl: `${leftOffset + 50}px`,
+              },
+            }}
+          >
             <AppContainer title="Work with NPC Generator Systems" fullView>
               <NpcSystemViewController />
             </AppContainer>
